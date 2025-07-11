@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Database Overview • Athlyte Palette</title>
+    <style>
+        :root {
+            /* Athlyte brand palette */
+            --primary: #003d79; /* deep navy */
+            --secondary: #00b4d8; /* bright cyan */
+            --accent: #ffb703; /* warm highlight */
+            --bg: #f5f7fa; /* light background */
+            --text: #14213d; /* near‑black */
+            --muted: #6b7280; /* gray */
+            --radius: 8px;
+            --max-width: 800px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 2rem 2.5rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        main {
+            max-width: var(--max-width);
+            width: 100%;
+            position: relative;
+        }
+
+        h1,
+        h2,
+        h3 {
+            scroll-margin-top: 80px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+            color: var(--primary);
+            display: flex; /* Use flexbox to align content and arrow */
+            align-items: center; /* Vertically align items */
+            gap: 0.5rem; /* Space between the arrow and the text */
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            margin-top: 2rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        h3 {
+            font-size: 1.25rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.4rem;
+            color: var(--primary);
+        }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        ul {
+            margin-left: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        li + li {
+            margin-top: 0.25rem;
+        }
+
+        a {
+            color: var(--secondary);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+            color: var(--accent);
+        }
+
+        /* anchor icon */
+        .anchor-link {
+            opacity: 0;
+            margin-left: 0.25rem;
+            font-size: 0.9em;
+            text-decoration: none;
+            color: var(--muted);
+        }
+
+        h2:hover .anchor-link,
+        h3:hover .anchor-link {
+            opacity: 1;
+        }
+
+        /* code blocks */
+        pre {
+            position: relative;
+            background: var(--primary);
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: var(--radius);
+            overflow: auto;
+        }
+
+        pre code {
+            font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 0.875rem;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: var(--secondary);
+            border: none;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: var(--accent);
+        }
+
+        /* divider */
+        .divider {
+            border: 0;
+            border-bottom: 2px solid var(--secondary);
+            margin-bottom: 1rem;
+        }
+
+        /* advisory */
+        .warn {
+            color: var(--muted);
+            font-size: 0.875rem;
+        }
+
+        /* Back arrow styling */
+        .back-arrow {
+            /* Removed absolute positioning from here */
+            font-size: 1.5rem; /* Adjusted size to fit beside heading */
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 0.2rem; /* Reduced padding */
+            border-radius: var(--radius);
+            transition: background-color 0.2s ease;
+        }
+
+        .back-arrow:hover {
+            background-color: rgba(0, 61, 121, 0.1);
+            text-decoration: none;
+        }
+
+        /* Responsive adjustment for back arrow */
+        @media (max-width: 768px) {
+            .back-arrow {
+                font-size: 1.2rem; /* Smaller on mobile */
+                padding: 0.1rem;
+            }
+            h1 {
+                font-size: 1.8rem; /* Adjust h1 size on mobile */
+            }
+            body {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <article>
+            <h1 id="Login Page">
+                <a href="athlyte_search_information_centre.html" class="back-arrow" aria-label="Go back">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                        <polyline points="12 19 5 12 12 5"></polyline>
+                    </svg>
+                </a>
+                Login Page
+            </h1>
+            <hr class="divider" />
+
+            <h2>New Registration</h2>
+            <p>New users are required to register. After completing your registration as a new user, you'll receive an email confirming your successful signup.</p>
+            <figure>
+                <img src="Search New Registration.png" width="800" height="275" alt="Athlyte Search Dashboard Screenshot" />
+            </figure>
+
+            <h2>Already Registered?</h2>
+            <p>If you have already registered, follow the steps below:</p>
+            <p>
+                <b>STEP 1:</b> Enter the Username to the username textfield. <br> <b>STEP 2:</b> Enter the Password to the password textfield. <br> <b>STEP 3:</b> Click on the Login Button
+            </p>
+
+            <figure>
+                <img src="Search Login.png" width="800" height="400" alt="Athlyte Search Dashboard Screenshot" />
+            </figure>
+        
+            <h2>Forgot Password</h2>
+            <p>If you forget your password, click on the "Forgot Password?" link. You'll be prompted to enter your email address. After entering your email, click the "Send Reset Link" button. An email will be sent to you with a link to reset your password.</p>
+        </article>
+    </main>
+</body>
+</html>

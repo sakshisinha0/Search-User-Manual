@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistics Data Centre</title>
+    <style>
+        /* Basic Reset & Font */
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif; /* Using Inter font */
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f8f8;
+        }
+
+        /* Color Palette from Athlyte Sports website */
+        :root {
+            --primary-blue: #003d79; /* Deep blue, similar to Athlyte's primary */
+            --dark-blue: #0068c2;    /* Darker blue, for strong accents/hover */
+            --light-gray: #f5f7fa;   /* Light background, off-white */
+            --medium-gray: #eaf4ff;  /* Very light blue/gray for subtle backgrounds */
+            --dark-gray: #14213d;    /* Dark text/elements */
+            --text-color: #003d79;   /* General text color */
+            --border-color: #dfe7ef; /* Light border color */
+            --code-bg: #f0f4f8;      /* Slightly darker light background for code blocks */
+            --code-text: #c7254e;    /* Retained for code readability */
+            --success-green: #28a745; /* Standard green for success, good contrast */
+            --warning-orange: #ffb703; /* Bright orange, similar to Athlyte's accent */
+            --info-cyan: #00b4d8;    /* Cyan/light blue, similar to Athlyte's secondary */
+        }
+
+        /* Layout */
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background-color: var(--primary-blue);
+            color: #fff;
+            padding: 20px;
+            position: fixed;
+            height: 100%;
+            overflow-y: auto;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            border-radius: 0 8px 8px 0; /* Rounded right corners */
+        }
+
+        .sidebar h2 {
+            color: #fff;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 10px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar ul li {
+            margin-bottom: 5px; /* Spacing between main menu items */
+        }
+
+        .sidebar ul li a {
+            display: flex; /* Use flex for alignment */
+            align-items: center;
+            justify-content: space-between; /* Space between text and arrow */
+            color: #fff;
+            padding: 12px 15px; /* Increased padding for better click area */
+            text-decoration: none;
+            transition: background-color 0.2s ease, padding-left 0.2s ease;
+            border-radius: 8px; /* Rounded corners for all links */
+            cursor: pointer; /* Indicate clickable */
+        }
+
+        .sidebar ul li a:hover {
+            background-color: var(--dark-blue);
+            padding-left: 20px; /* Slight indent on hover */
+        }
+
+        /* Active state for sidebar links */
+        .sidebar ul li a.active {
+            background-color: var(--dark-blue);
+            font-weight: bold;
+            padding-left: 20px;
+        }
+
+        /* Submenu styles */
+        .sidebar .submenu {
+            list-style: none;
+            padding: 0;
+            margin: 5px 0 0 15px; /* Indent submenu items */
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            background-color: rgba(0, 0, 0, 0.2); /* Slightly darker background for submenu */
+            border-radius: 8px; /* Rounded corners for submenu container */
+        }
+
+        .sidebar .submenu.show {
+            max-height: 500px; /* A value large enough to contain all items, adjust if needed */
+            transition: max-height 0.3s ease-in;
+        }
+
+        .sidebar .submenu li a {
+            padding: 10px 15px; /* Padding for submenu items */
+            font-size: 0.95em;
+            border-radius: 8px; /* Rounded corners for submenu links */
+        }
+
+        .sidebar .submenu li a:hover {
+            background-color: rgba(255, 255, 255, 0.2); /* Lighter hover for submenu */
+            padding-left: 20px;
+        }
+
+        .sidebar .submenu li a.active {
+            background-color: rgba(255, 255, 255, 0.3); /* Distinct active for submenu */
+            font-weight: bold;
+            padding-left: 20px;
+        }
+
+        /* Dropdown arrow */
+        .sidebar .arrow {
+            display: inline-block;
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 5px solid #fff;
+            transition: transform 0.3s ease;
+            margin-left: 10px; /* Space from text */
+        }
+
+        .sidebar .dropdown-toggle.active .arrow {
+            transform: rotate(180deg);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 250px; /* Offset by sidebar width */
+            flex-grow: 1;
+            padding: 30px;
+            background-color: var(--light-gray);
+        }
+
+        .main-content section {
+            background-color: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 30px;
+            padding: 25px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .main-content h1 {
+            color: var(--primary-blue);
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-blue);
+        }
+
+        .main-content h2 {
+            color: var(--text-color);
+            font-size: 1.8em;
+            margin-top: 20px;
+            margin-bottom: 15px;
+        }
+
+        .main-content h3 {
+            color: var(--text-color);
+            font-size: 1.4em;
+            margin-top: 15px;
+            margin-bottom: 10px;
+        }
+
+        .main-content p {
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px; /* Rounded table corners */
+            overflow: hidden; /* Ensures rounded corners clip content */
+        }
+
+        table th, table td {
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            text-align: left;
+            vertical-align: top;
+            color: var(--text-color);
+        }
+
+        table th {
+            background-color: var(--medium-gray);
+            font-weight: bold;
+            color: var(--text-color);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                box-shadow: none;
+                border-radius: 0; /* Remove rounded corners on small screens */
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 15px;
+            }
+            .sidebar ul {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px;
+            }
+            .sidebar ul li {
+                margin-bottom: 0; /* Remove extra margin on mobile */
+            }
+            .sidebar ul li a {
+                padding: 8px 12px;
+                border: 1px solid rgba(255, 255, 255, 0.3);
+                border-radius: 5px;
+                text-align: center;
+                flex-grow: 1; /* Allow links to grow to fill space */
+                justify-content: center; /* Center text in mobile links */
+            }
+            .sidebar h2 {
+                text-align: center;
+            }
+            .sidebar .submenu {
+                padding-left: 0;
+                width: 100%;
+                text-align: center;
+                margin-left: 0;
+            }
+            .sidebar .submenu li {
+                width: 100%;
+            }
+            .sidebar .arrow {
+                display: none; /* Hide arrow on mobile for simpler navigation */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <h2>Data Centre</h2>
+            <ul>
+                <li class="sidebar-item">
+                    <a href="#mfb" class="sidebar-link dropdown-toggle">Men's Football <span class="arrow"></span></a>
+                    <ul class="submenu">
+                        <li><a href="#mfb-players" class="sidebar-link">Players</a></li>
+                        <li><a href="#mfb-teams" class="sidebar-link">Teams</a></li>
+                    </ul>
+                </li>
+                <li class="sidebar-item">
+                    <a href="#mbb" class="sidebar-link dropdown-toggle">Men's Basketball <span class="arrow"></span></a>
+                    <ul class="submenu">
+                        <li><a href="#mbb-players" class="sidebar-link">Players</a></li>
+                        <li><a href="#mbb-teams" class="sidebar-link">Teams</a></li>
+                    </ul>
+                </li>
+                <li class="sidebar-item">
+                    <a href="#wbb" class="sidebar-link dropdown-toggle">Women's Basketball <span class="arrow"></span></a>
+                    <ul class="submenu">
+                        <li><a href="#wbb-players" class="sidebar-link">Players</a></li>
+                        <li><a href="#wbb-teams" class="sidebar-link">Teams</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <section id="mfb">
+                <h1>Statistics Data Centre</h1>
+                <p>This comprehensive data centre provides detailed information on all the statistics utilized across the project, offering a valuable resource for understanding and integrating sports data.</p>
+
+                <h2>Men's Football</h2>
+                <h3 id="mfb-players">Players</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Sub-category</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Longest Field Goal Made</td><td>Special Teams</td><td>Field Goal</td><td>The longest successful field goal attempt made by the player during the game, measured in yards.</td></tr>
+                        <tr><td>Field Goals Attempted</td><td>Special Teams</td><td>Field Goal</td><td>The total number of field goal attempts made by the player during the game.</td></tr>
+                        <tr><td>Field Goals Blocked</td><td>Special Teams</td><td>Field Goal</td><td>The total number of field goal attempts that were blocked by the player during the game.</td></tr>
+                        <tr><td>Field Goals Made</td><td>Special Teams</td><td>Field Goal</td><td>The total number of successful field goals made by the player during the game.</td></tr>
+                        <tr><td>Fumble Return Touchdowns</td><td>Defense</td><td>Fumble Return</td><td>The total number of touchdowns scored by the player as a result of returning a fumble recovery.</td></tr>
+                        <tr><td>Fumble Return Yards</td><td>Defense</td><td>Fumble Return</td><td>The total number of yards gained by the player when returning a fumble recovery.</td></tr>
+                        <tr><td>Fumbles Forced</td><td>Defense</td><td>Fumbles</td><td>The total number of fumbles caused by the player during the game.</td></tr>
+                        <tr><td>Fumbles Lost</td><td>Defense</td><td>Fumbles</td><td>The total number of fumbles lost by the player during the game.</td></tr>
+                        <tr><td>Fumbles Recovered</td><td>Defense</td><td>Fumbles</td><td>The total number of fumbles recovered by the player during the game.</td></tr>
+                        <tr><td>Longest Interception Return</td><td>Defense</td><td>Interception Return</td><td>The longest distance, in yards, the player returned an interception during the game.</td></tr>
+                        <tr><td>Interception Return Yards</td><td>Defense</td><td>Interception Return</td><td>The total number of yards gained by the player when returning an interception.</td></tr>
+                        <tr><td>Interception Touchdowns</td><td>Defense</td><td>Interception Return</td><td>The total number of touchdowns scored by the player as a result of returning an interception.</td></tr>
+                        <tr><td>Kickoffs Gross Yards</td><td>Special Teams</td><td>Kickoff</td><td>The total number of yards covered by all kickoffs made by the player during the game.</td></tr>
+                        <tr><td>Kickoffs Out of Bounds</td><td>Special Teams</td><td>Kickoff</td><td>The total number of kickoffs that went out of bounds during the game.</td></tr>
+                        <tr><td>Total Kickoffs</td><td>Special Teams</td><td>Kickoff</td><td>The total number of kickoffs made by the player during the game.</td></tr>
+                        <tr><td>Kickoffs Touchbacks</td><td>Special Teams</td><td>Kickoff</td><td>The total number of kickoffs that resulted in touchbacks during the game.</td></tr>
+                        <tr><td>Longest Kick Return</td><td>Special Teams</td><td>Kickoff</td><td>The longest distance, in yards, the player returned a kickoff during the game.</td></tr>
+                        <tr><td>Total Kick Returns</td><td>Special Teams</td><td>Kickoff</td><td>The total number of kickoffs returned by the player during the game.</td></tr>
+                        <tr><td>Kick Return Touchdowns</td><td>Special Teams</td><td>Kickoff</td><td>The total number of touchdowns scored by the player as a result of returning a kickoff.</td></tr>
+                        <tr><td>Kick Return Yards</td><td>Special Teams</td><td>Kickoff</td><td>The total number of yards gained by the player when returning a kickoff.</td></tr>
+                        <tr><td>Kicks Blocked By</td><td>Defense</td><td>Blocks</td><td>The total number of kicks (field goals or extra points) blocked by the player during the game.</td></tr>
+                        <tr><td>Pass Breakups</td><td>Defense</td><td>PBU</td><td>The total number of passes defended by the player during the game, resulting in an incomplete pass.</td></tr>
+                        <tr><td>Passing Attempts</td><td>Offense</td><td>Passes</td><td>The total number of times the player has attempted to throw a forward pass during the game.</td></tr>
+                        <tr><td>Passing Completions</td><td>Offense</td><td>Passes</td><td>The total number of successful forward passes completed by the player during the game.</td></tr>
+                        <tr><td>Intercepted Passes</td><td>Offense</td><td>Passes</td><td>The total number of forward passes thrown by the player that were intercepted by the opposing team during the game.</td></tr>
+                        <tr><td>Longest Pass Completion</td><td>Offense</td><td>Passes</td><td>The longest distance, in yards, of a completed forward pass thrown by the player during the game.</td></tr>
+                        <tr><td>Passing Sacks</td><td>Offense</td><td>Passes</td><td>The total number of times the player was sacked while attempting a forward pass during the game.</td></tr>
+                        <tr><td>Passing Touchdowns</td><td>Offense</td><td>Passes</td><td>The total number of touchdowns scored by the player through completed forward passes during the game.</td></tr>
+                        <tr><td>Passing Yards</td><td>Offense</td><td>Passes</td><td>The total number of yards gained by the player through completed forward passes during the game.</td></tr>
+                        <tr><td>Passing Yards Lost to Sacks</td><td>Offense</td><td>Passes</td><td>The total number of yards lost by the player due to sacks while attempting forward passes during the game. Default to this if the query is "Passing yards sacked" or "Passes yards sacked"</td></tr>
+                        <tr><td>Pass Interceptions</td><td>Offense</td><td>Passes</td><td>The total number of times the player intercepted a forward pass thrown by the opposing team during the game.</td></tr>
+                        <tr><td>Quarterback Hurries</td><td>Offense</td><td>Passes</td><td>The total number of times the player pressured the opposing quarterback, causing them to hurry their throw, during the game.</td></tr>
+                        <tr><td>PAT Kicks Attempted</td><td>Special Teams</td><td>PATs</td><td>The total number of point-after-touchdown (PAT) kicks attempted by the player during the game.</td></tr>
+                        <tr><td>PAT Kicks Made</td><td>Special Teams</td><td>PATs</td><td>The total number of successful point-after-touchdown (PAT) kicks made by the player during the game.</td></tr>
+                        <tr><td>PAT Pass Attempts</td><td>Offense</td><td>PATs</td><td>The total number of point-after-touchdown (PAT) pass attempts made by the player during the game.</td></tr>
+                        <tr><td>PAT Passes Completed</td><td>Offense</td><td>PATs</td><td>The total number of successful point-after-touchdown (PAT) passes completed by the player during the game.</td></tr>
+                        <tr><td>PAT Rush Attempts</td><td>Offense</td><td>PATs</td><td>The total number of point-after-touchdown (PAT) rush attempts made by the player during the game.</td></tr>
+                        <tr><td>PAT Rushes</td><td>Offense</td><td>PATs</td><td>The total number of successful point-after-touchdown (PAT) rushes made by the player during the game.</td></tr>
+                        <tr><td>Punt Returns</td><td>Special Teams</td><td>Punt return</td><td>The total number of punts returned by the player during the game.</td></tr>
+                        <tr><td>Longest Punt Return</td><td>Special Teams</td><td>Punt return</td><td>The longest distance, in yards, the player returned a punt during the game.</td></tr>
+                        <tr><td>Punt Return Touchdowns</td><td>Special Teams</td><td>Punt return</td><td>The total number of touchdowns scored by the player as a result of returning a punt during the game.</td></tr>
+                        <tr><td>Punt Return Yards</td><td>Special Teams</td><td>Punt return</td><td>The total number of yards gained by the player when returning a punt during the game.</td></tr>
+                        <tr><td>Punts</td><td>Special Teams</td><td>Punts</td><td>The total number of punts executed by the player during the game.</td></tr>
+                        <tr><td>Punts Over 50 Yards</td><td>Special Teams</td><td>Punts</td><td>The total number of punts kicked by the player that traveled over 50 yards during the game.</td></tr>
+                        <tr><td>Punts Blocked</td><td>Special Teams</td><td>Punts</td><td>The total number of punts that were blocked by the opposing team during the game.</td></tr>
+                        <tr><td>Punts Fair Caught</td><td>Special Teams</td><td>Punts</td><td>The total number of punts that were caught by the receiving team without attempting to advance the ball (fair catch) during the game.</td></tr>
+                        <tr><td>Punts Inside 20 Yards</td><td>Special Teams</td><td>Punts</td><td>The total number of punts that were downed inside the opponent's 20-yard line during the game.</td></tr>
+                        <tr><td>Longest Punt</td><td>Special Teams</td><td>Punts</td><td>The longest distance, in yards, the player punted the ball during the game.</td></tr>
+                        <tr><td>Punts Touchbacks</td><td>Special Teams</td><td>Punts</td><td>The total number of punts that resulted in the ball being downed in the end zone, resulting in a touchback during the game.</td></tr>
+                        <tr><td>Punting Yards</td><td>Special Teams</td><td>Punts</td><td>The total number of yards covered by all punts executed by the player during the game.</td></tr>
+                        <tr><td>Receptions</td><td>Offense</td><td>Receiving</td><td>The total number of passes caught by the player during the game.</td></tr>
+                        <tr><td>Longest Reception</td><td>Offense</td><td>Receiving</td><td>The longest distance, in yards, the player caught a pass during the game.</td></tr>
+                        <tr><td>Reception Touchdowns</td><td>Offense</td><td>Receiving</td><td>Also called receiving touchdowns. The total number of touchdowns scored by the player through caught passes during the game. Also called "Receiving Touchdowns"</td></tr>
+                        <tr><td>Reception Yards</td><td>Offense</td><td>Receiving</td><td>Yards gained by a receiver on a play in which they successfully catch a pass, including the distance the ball was thrown and any additional yardage gained after the catch. Also called "Receiving Yards"</td></tr>
+                        <tr><td>Rushing Attempts</td><td>Offense</td><td>Rushing</td><td>The total number of times the player carried the ball during the game.</td></tr>
+                        <tr><td>Longest Rush</td><td>Offense</td><td>Rushing</td><td>The longest distance, in yards, the player advanced the ball on a rushing attempt during the game.</td></tr>
+                        <tr><td>Rushing Touchdowns</td><td>Offense</td><td>Rushing</td><td>The total number of touchdowns scored by the player through rushing attempts during the game.</td></tr>
+                        <tr><td>Rushing Yards Gained</td><td>Offense</td><td>Rushing</td><td>The total number of yards gained by the player through rushing attempts during the game.</td></tr>
+                        <tr><td>Rushing Yards Lost</td><td>Offense</td><td>Rushing</td><td>The total number of yards lost by the player due to negative rushing plays during the game.</td></tr>
+                        <tr><td>Net Rushing Yards</td><td>Offense</td><td>Rushing</td><td>Should be returned by default if the search is "Rushing Yards". The total number of yards gained by the player through rushing attempts, adjusted for any yards lost due to negative rushing plays during the game.</td></tr>
+                        <tr><td>Assisted Sacks</td><td>Defense</td><td>Sacks</td><td>The total number of sacks in which the player participated, sharing the responsibility with one or more teammates during the game.</td></tr>
+                        <tr><td>Total Sacks</td><td>Defense</td><td>Sacks</td><td>The total number of times the player successfully tackled the opposing quarterback behind the line of scrimmage, resulting in a loss of yards during the game.</td></tr>
+                        <tr><td>Unassisted Sacks</td><td>Defense</td><td>Sacks</td><td>The total number of sacks in which the player was solely responsible for tackling the opposing quarterback behind the line of scrimmage during the game.</td></tr>
+                        <tr><td>Sack Yards</td><td>Defense</td><td>Sacks</td><td>The total number of yards lost by the opposing team due to sacks made by the player during the game.</td></tr>
+                        <tr><td>Assisted Tackles</td><td>Defense</td><td>Tackles</td><td>The total number of tackles in which the player participated, sharing the responsibility with one or more teammates during the game.</td></tr>
+                        <tr><td>Assisted Tackles for Loss</td><td>Defense</td><td>Tackles for Loss</td><td>The total number of tackles for loss in which the player participated, sharing the responsibility with one or more teammates during the game.</td></tr>
+                        <tr><td>Solo Tackles for Loss</td><td>Defense</td><td>Tackles for Loss</td><td>The total number of tackles for loss in which the player was solely responsible for stopping the opposing player behind the line of scrimmage during the game.</td></tr>
+                        <tr><td>Total Tackles for Loss</td><td>Defense</td><td>Tackles for Loss</td><td>The total number of tackles for loss made by the player during the game, including both solo and assisted tackles.</td></tr>
+                        <tr><td>Solo Tackles</td><td>Defense</td><td>Tackles</td><td>The total number of tackles in which the player was solely responsible for stopping the opposing player during the game.</td></tr>
+                        <tr><td>Total Tackles</td><td>Defense</td><td>Tackles</td><td>The total number of tackles made by the player during the game, including both solo and assisted tackles.</td></tr>
+                        <tr><td>Tackles Yards</td><td>Defense</td><td>Tackles for Loss</td><td>The total number of yards lost by the opposing team due to tackles made by the player during the game.</td></tr>
+                        <tr><td>Touchdowns Scored</td><td>Offense</td><td>Scoring</td><td>The total number of touchdowns scored by the player during the game, including rushing, receiving, and defensive touchdowns.</td></tr>
+                        <tr><td>Passing Yards Per Attempt</td><td>Offense</td><td>Passes</td><td>The average number of yards gained per passing attempt by the player.</td></tr>
+                        <tr><td>Pass Completion Percentage</td><td>Offense</td><td>Passes</td><td>The percentage of pass attempts completed by the player.</td></tr>
+                        <tr><td>Average Rushing Yards</td><td>Offense</td><td>Rushing</td><td>The average number of net yards gained per rushing attempt by the player.</td></tr>
+                        <tr><td>Average Yards per Reception</td><td>Offense</td><td>Receiving</td><td>The average number of yards gained per reception by the player.</td></tr>
+                        <tr><td>Takeaways</td><td>Defense</td><td>Turnovers</td><td>The number of times the player recovered a fumble or intercepted a pass.</td></tr>
+                        <tr><td>Field Goal Percentage</td><td>Special Teams</td><td>Field Goal</td><td>The percentage of field goal attempts successfully made by the player.</td></tr>
+                        <tr><td>Kickoffs Returned</td><td>Special Teams</td><td>Kickoff Returns</td><td>The number of kickoffs returned by the player.</td></tr>
+                        <tr><td>Average Punt Return Yards</td><td>Special Teams</td><td>Punt return</td><td>The average number of yards gained per punt return by the player.</td></tr>
+                        <tr><td>Net Kickoff Yards</td><td>Special Teams</td><td>Kickoff</td><td>The total net yards gained on kickoffs by the special teams unit.</td></tr>
+                        <tr><td>Average Punt Yards</td><td>Special Teams</td><td>Punts</td><td>The average number of yards per punt made by the player.</td></tr>
+                        <tr><td>Total Offensive Yards</td><td>Offense</td><td>Total Offense</td><td>The total number of yards gained by the player on offense.</td></tr>
+                        <tr><td>All-Purpose Yards</td><td>Offense</td><td>Total Offense</td><td>The total yards gained by the player from rushing, receiving, and returns.</td></tr>
+                        <tr><td>Turnovers Committed</td><td>Offense</td><td>Total Offense</td><td>The number of times the player turned the ball over, via fumble or interception.</td></tr>
+                        <tr><td>Longest field goal attempt</td><td>Special Teams</td><td>Field Goal</td><td>The longest field goal attempted during the game, regardless of whether it was successful.</td></tr>
+                        <tr><td>Field Goal Blocked by</td><td>Defense</td><td>Blocks</td><td>The number of field goals blocked by the team or player.</td></tr>
+                        <tr><td>Longest fumble return</td><td>Defense</td><td>Fumble Return</td><td>The longest distance returned by the team after recovering a fumble.</td></tr>
+                        <tr><td>Total fumble returns</td><td>Defense</td><td>Fumble Return</td><td>The total number of fumble returns by the team.</td></tr>
+                        <tr><td>average yards per fumble return</td><td>Defense</td><td>Fumble Return</td><td>The average yards gained on fumble returns.</td></tr>
+                        <tr><td>Avg yards per interception return</td><td>Defense</td><td>Interception Return</td><td>The average yards gained after intercepting a pass.</td></tr>
+                        <tr><td>Average gross yards from kickoff</td><td>Special Teams</td><td>Kickoff</td><td>The average gross yardage gained per kickoff.</td></tr>
+                        <tr><td>Kickoff gross yards</td><td>Special Teams</td><td>Kickoff</td><td>The total gross yardage gained from all kickoffs.</td></tr>
+                        <tr><td>Kick-off return average</td><td>Special Teams</td><td>Kickoff</td><td>The average yards gained per kickoff return.</td></tr>
+                        <tr><td>Total kickoff returns</td><td>Special Teams</td><td>Kickoff</td><td>The total number of kickoff returns attempted.</td></tr>
+                        <tr><td>All kicks blocked by</td><td>Defense</td><td>Blocks</td><td>The number of any type of kicks (FG, PAT, punt) blocked by the team.</td></tr>
+                        <tr><td>Pass Efficiency</td><td>Offense</td><td>Passes</td><td>A composite metric measuring a quarterback's overall passing effectiveness.</td></tr>
+                        <tr><td>Avg yards per pass completion</td><td>Offense</td><td>Passes</td><td>The average number of yards gained per completed pass.</td></tr>
+                        <tr><td>Percentage of passes resulting in TD</td><td>Offense</td><td>Passes</td><td>The percentage of completed passes that resulted in a touchdown.</td></tr>
+                        <tr><td>PAT attempt</td><td>Special Teams</td><td>PATs</td><td>The total number of point-after-touchdown (PAT) attempts.</td></tr>
+                        <tr><td>PAT kick blocked</td><td>Offense</td><td>PATs</td><td>The number of PAT kicks that were blocked.</td></tr>
+                        <tr><td>PAT kick blocked by</td><td>Defense</td><td>Blocks</td><td>The number of PAT kicks blocked by the team.</td></tr>
+                        <tr><td>PAT Fumble return</td><td>Defense</td><td>PATs</td><td>The number of fumble returns that occurred during PAT attempts.</td></tr>
+                        <tr><td>PAT kick return</td><td>Defense</td><td>PATs</td><td>The number of PAT kick returns after a failed attempt.</td></tr>
+                        <tr><td>PAT kick made</td><td>Special Teams</td><td>PATs</td><td>The total number of successful PAT kicks made.</td></tr>
+                        <tr><td>PAT receptions</td><td>Offense</td><td>PATs</td><td>The number of receptions made during a 2-point PAT attempt.</td></tr>
+                        <tr><td>PAT 2pt conversion</td><td>Offense</td><td>PATs</td><td>The number of 2-point conversion attempts following a touchdown.</td></tr>
+                        <tr><td>PAT 2pt made</td><td>Offense</td><td>PATs</td><td>The number of successful 2-point PAT conversions.</td></tr>
+                        <tr><td>All purpose net yards</td><td>Offense</td><td>Plays</td><td>Total yards gained by a player including rushing, receiving, and returns.</td></tr>
+                        <tr><td>Total plays</td><td>Offense</td><td>Plays</td><td>Total number of offensive plays executed.</td></tr>
+                        <tr><td>Total points</td><td>Offense</td><td>Scoring</td><td>Total number of points scored by the team.</td></tr>
+                        <tr><td>Punts blocked by</td><td>Defense</td><td>Blocks</td><td>The number of punts blocked by the team.</td></tr>
+                        <tr><td>Average punt yards (net)</td><td>Special Teams</td><td>Punts</td><td>The average net distance of all punts.</td></tr>
+                        <tr><td>Net punt yards</td><td>Special Teams</td><td>Punts</td><td>The total net yardage of all punts.</td></tr>
+                        <tr><td>Redzone attempts passing plays</td><td>Offense</td><td>Red Zone</td><td>The number of pass plays attempted in the red zone.</td></tr>
+                        <tr><td>Rush left</td><td>Offense</td><td>Rushing</td><td>The number of rushing plays attempted to the left side.</td></tr>
+                        <tr><td>Rush middle</td><td>Offense</td><td>Rushing</td><td>The number of rushing plays attempted up the middle.</td></tr>
+                        <tr><td>Rush right</td><td>Offense</td><td>Rushing</td><td>The number of rushing plays attempted to the right side.</td></tr>
+                        <tr><td>Safety 2 pt</td><td>Defense</td><td>Safety</td><td>The number of safeties (2-point defensive scores) recorded.</td></tr>
+                        <tr><td>Caused turnovers</td><td>Defense</td><td>Turnovers</td><td>The number of times a team forced the opponent to lose possession.</td></tr>
+                        <tr><td>Average yards per play</td><td>Offense</td><td>Plays</td><td>The average number of yards gained per offensive play.</td></tr>
+                    </tbody>
+                </table>
+                <h3 id="mfb-teams">Teams</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Sub-category</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Completed Passes</td><td>Offense</td><td>Passes</td><td>The total number of successful pass completions by the team.</td></tr>
+                        <tr><td>Passing Yards</td><td>Offense</td><td>Passes</td><td>The total number of yards gained by the team through completed passes.</td></tr>
+                        <tr><td>Longest Pass</td><td>Offense</td><td>Passes</td><td>The longest single pass completion by the team in the game.</td></tr>
+                        <tr><td>Passing Touchdowns</td><td>Offense</td><td>Passes</td><td>The total number of touchdowns scored by the team through passing plays.</td></tr>
+                        <tr><td>Intercepted Passes</td><td>Offense</td><td>Passes</td><td>The number of passes thrown by the team that were intercepted by the opposing defense.</td></tr>
+                        <tr><td>Pass Attempts</td><td>Offense</td><td>Passes</td><td>The total number of times the team attempted a forward pass.</td></tr>
+                        <tr><td>Times Sacked</td><td>Offense</td><td>Passes</td><td>The number of times the team's quarterback was sacked while attempting to pass.</td></tr>
+                        <tr><td>Sack Yards Lost</td><td>Offense</td><td>Passes</td><td>The total number of yards lost by the team due to sacks.</td></tr>
+                        <tr><td>Receptions</td><td>Offense</td><td>Receiving</td><td>The total number of completed catches made by the team's receivers.</td></tr>
+                        <tr><td>Receiving Yards</td><td>Offense</td><td>Receiving</td><td>The total number of yards gained by the team through receptions.</td></tr>
+                        <tr><td>Longest Reception</td><td>Offense</td><td>Receiving</td><td>The longest single reception made by a player on the team.</td></tr>
+                        <tr><td>Receiving Touchdowns</td><td>Offense</td><td>Receiving</td><td>The total number of touchdowns scored by the team via receptions.</td></tr>
+                        <tr><td>Rushing Attempts</td><td>Offense</td><td>Rushing</td><td>The total number of times the team attempted a rushing play.</td></tr>
+                        <tr><td>Net Rushing Yards</td><td>Offense</td><td>Rushing</td><td>The total number of yards gained by the team on rushing plays, subtracting any yards lost.</td></tr>
+                        <tr><td>Rushing Yards Gained</td><td>Offense</td><td>Rushing</td><td>The total number of yards gained by the team on rushing plays before any losses.</td></tr>
+                        <tr><td>Longest Rush</td><td>Offense</td><td>Rushing</td><td>The longest single rushing play executed by the team.</td></tr>
+                        <tr><td>Rushing Touchdowns</td><td>Offense</td><td>Rushing</td><td>The total number of touchdowns scored by the team on rushing plays.</td></tr>
+                        <tr><td>Rushing Yards Lost</td><td>Offense</td><td>Rushing</td><td>The total number of yards lost by the team on rushing plays.</td></tr>
+                        <tr><td>Total First Downs</td><td>Offense</td><td>First Down</td><td>The total number of first downs achieved by the team.</td></tr>
+                        <tr><td>First Downs by Rushing</td><td>Offense</td><td>First Down</td><td>The number of first downs achieved by the team through rushing plays.</td></tr>
+                        <tr><td>First Downs by Passing</td><td>Offense</td><td>First Down</td><td>The number of first downs achieved by the team through passing plays.</td></tr>
+                        <tr><td>First Downs by Penalty</td><td>Offense</td><td>First Down</td><td>The number of first downs awarded to the team due to penalties committed by the opposing team.</td></tr>
+                        <tr><td>Third Down Attempts</td><td>Offense</td><td>Third Down</td><td>The total number of times the team attempted a play on third down.</td></tr>
+                        <tr><td>Third Down Conversions</td><td>Offense</td><td>Third Down</td><td>The total number of times the team successfully converted a third down attempt into a first down.</td></tr>
+                        <tr><td>Fourth Down Attempts</td><td>Offense</td><td>Fourth Down</td><td>The total number of times the team attempted a play on fourth down.</td></tr>
+                        <tr><td>Fourth Down Conversions</td><td>Offense</td><td>Fourth Down</td><td>The total number of times the team successfully converted a fourth down attempt into a first down.</td></tr>
+                        <tr><td>Fumbles Lost</td><td>Defense</td><td>Fumbles</td><td>The total number of times the team fumbled the ball and lost possession.</td></tr>
+                        <tr><td>Total Fumbles</td><td>Defense</td><td>Fumbles</td><td>The total number of fumbles committed by the team, regardless of whether possession was lost.</td></tr>
+                        <tr><td>Total Penalties</td><td>Penalties</td><td></td><td>The total number of penalties committed by the team.</td></tr>
+                        <tr><td>Penalty Yards</td><td>Pentalties</td><td></td><td>The total number of yards lost due to penalties committed by the team.</td></tr>
+                        <tr><td>Red Zone Attempts</td><td>Offense</td><td>Red Zone</td><td>The total number of times the team reached the opponent's red zone (inside the 20-yard line).</td></tr>
+                        <tr><td>Red Zone Scores</td><td>Offense</td><td>Red Zone</td><td>The number of times the team successfully scored (touchdown or field goal) after entering the red zone.</td></tr>
+                        <tr><td>Red Zone Points</td><td>Offense</td><td>Red Zone</td><td>The total number of points scored by the team from red zone possessions.</td></tr>
+                        <tr><td>Red Zone Rushing Touchdowns</td><td>Offense</td><td>Red Zone</td><td>The number of touchdowns the team scored by rushing inside the red zone.</td></tr>
+                        <tr><td>Red Zone Passing Touchdowns</td><td>Offense</td><td>Red Zone</td><td>The number of touchdowns the team scored by passing inside the red zone.</td></tr>
+                        <tr><td>Red Zone Field Goals Made</td><td>Offense</td><td>Red Zone</td><td>The total number of field goals successfully made from red zone possessions.</td></tr>
+                        <tr><td>Red Zone Field Goal Attempts</td><td>Offense</td><td>Red Zone</td><td>The total number of field goal attempts the team made from red zone possessions.</td></tr>
+                        <tr><td>Red Zone Turnovers on Downs</td><td>Offense</td><td>Red Zone</td><td>The number of times the team failed to convert a fourth down in the red zone, losing possession.</td></tr>
+                        <tr><td>Red Zone Interceptions</td><td>Offense</td><td>Red Zone</td><td>The number of times the team threw an interception inside the red zone.</td></tr>
+                        <tr><td>Red Zone Fumbles Lost</td><td>Offense</td><td>Red Zone</td><td>The number of times the team fumbled and lost possession inside the red zone.</td></tr>
+                        <tr><td>Red Zone End of Half</td><td>Offense</td><td>Red Zone</td><td>The number of times a red zone possession ended due to the end of the half.</td></tr>
+                        <tr><td>Red Zone End of Game</td><td>Offense</td><td>Red Zone</td><td>The number of times a red zone possession ended due to the end of the game.</td></tr>
+                        <tr><td>Miscellaneous Yards</td><td>Offense</td><td></td><td>The total number of yards gained or lost by the team in plays classified as miscellaneous.</td></tr>
+                        <tr><td>Time of Possession</td><td>Offense</td><td></td><td>The total amount of time the team controlled the ball during the game.</td></tr>
+                        <tr><td>Onside Kick Attempts</td><td>Special Teams</td><td>Kickoff</td><td>The total number of onside kick attempts made by the team.</td></tr>
+                        <tr><td>Onside Kicks Recovered</td><td>Special Teams</td><td>Kickoff</td><td>The number of successful onside kicks recovered by the team.</td></tr>
+                        <tr><td>Points off Turnovers</td><td>Offense</td><td>Points</td><td>The total number of points scored by the team after forcing a turnover.</td></tr>
+                        <tr><td>Assisted Tackles</td><td>Defense</td><td>Tackles</td><td>The number of tackles where the defender contributed but did not make the solo tackle.</td></tr>
+                        <tr><td>Solo Tackles</td><td>Defense</td><td>Tackles</td><td>The number of tackles made solely by a defender without assistance.</td></tr>
+                        <tr><td>Total Tackles</td><td>Defense</td><td>Tackles</td><td>The total number of tackles made by the team, including solo and assisted tackles.</td></tr>
+                        <tr><td>Interceptions</td><td>Offense</td><td>Passes</td><td>The number of passes intercepted by the team's defense.</td></tr>
+                        <tr><td>Interception Return Yards</td><td>Defense</td><td>Interception Return</td><td>The total number of yards gained by the team after intercepting a pass.</td></tr>
+                        <tr><td>Pass Breakups</td><td>Defense</td><td>PBU</td><td>The number of times the team successfully defended a pass without intercepting it.</td></tr>
+                        <tr><td>Unassisted Sacks</td><td>Defense</td><td>Sacks</td><td>The number of times a single defender sacked the opposing quarterback.</td></tr>
+                        <tr><td>Assisted Sacks</td><td>Defense</td><td>Sacks</td><td>The number of times multiple defenders contributed to sacking the quarterback.</td></tr>
+                        <tr><td>Total Sacks</td><td>Defense</td><td>Sacks</td><td>The total number of quarterback sacks made by the team's defense.</td></tr>
+                        <tr><td>Sack Yards</td><td>Defense</td><td>Sacks</td><td>The total number of yards lost by the opposing team due to sacks made by the defense.</td></tr>
+                        <tr><td>Quarterback Hurries</td><td>Offense</td><td>Passes</td><td>The number of times the team's defense forced the quarterback to throw early due to pressure.</td></tr>
+                        <tr><td>Forced Fumbles</td><td>Defense</td><td>Fumbles</td><td>The number of times the team forced the opposing player to fumble the ball.</td></tr>
+                        <tr><td>Fumbles Recovered</td><td>Defense</td><td>Fumbles</td><td>The number of fumbles recovered by the team, regardless of who forced them.</td></tr>
+                        <tr><td>Fumble Return Yards</td><td>Defense</td><td>Fumble Return</td><td>The total number of yards gained after recovering a fumble.</td></tr>
+                        <tr><td>Fumble Return Touchdowns</td><td>Defense</td><td>Fumble Return</td><td>The total number of touchdowns scored by the team after recovering a fumble.</td></tr>
+                        <tr><td>Kicks Blocked By</td><td>Defense</td><td>Blocks</td><td>The total number of kicks (field goals or extra points) blocked by the player during the game.</td></tr>
+                        <tr><td>Assisted Tackles for Loss</td><td>Defense</td><td>Tackles for Loss</td><td>The number of tackles for loss where multiple defenders contributed.</td></tr>
+                        <tr><td>Solo Tackles for Loss</td><td>Defense</td><td>Tackles for Loss</td><td>The number of tackles for loss made solely by a defender.</td></tr>
+                        <tr><td>Total Tackles for Loss</td><td>Defense</td><td>Tackles for Loss</td><td>The total number of tackles resulting in negative yardage for the opposing team.</td></tr>
+                        <tr><td>Tackle for Loss Yards</td><td>Defense</td><td>Tackles for Loss</td><td>The total number of yards lost by the opposing team due to tackles for loss.</td></tr>
+                        <tr><td>Interception Return Yards</td><td>Defense</td><td>Interception Return</td><td>The total number of yards gained by the team after intercepting a pass.</td></tr>
+                        <tr><td>Interception Return Touchdowns</td><td>Defense</td><td>Interception Return</td><td>The total number of touchdowns scored by the team after intercepting a pass.</td></tr>
+                        <tr><td>Longest Interception Return</td><td>Defense</td><td>Interception Return</td><td>The longest single interception return made by the team.</td></tr>
+                        <tr><td>Interceptions Made</td><td>Offense</td><td>Passes</td><td>The total number of passes intercepted by the team's defense.</td></tr>
+                        <tr><td>Field Goals Made</td><td>Special Teams</td><td>Field Goal</td><td>The total number of successful field goals made by the team.</td></tr>
+                        <tr><td>Field Goals Attempted</td><td>Special Teams</td><td>Field Goal</td><td>The total number of field goal attempts made by the team.</td></tr>
+                        <tr><td>Longest Field Goal Made</td><td>Special Teams</td><td>Field Goal</td><td>The longest field goal successfully made by the team.</td></tr>
+                        <tr><td>Blocked Field Goals</td><td>Special Teams</td><td>Field Goal</td><td>The total number of field goal attempts blocked by the opposing team.</td></tr>
+                        <tr><td>PAT Kicks Attempted</td><td>Special Teams</td><td>PATs</td><td>The total number of extra point kicks attempted after touchdowns.</td></tr>
+                        <tr><td>PAT Kicks Made</td><td>Special Teams</td><td>PATs</td><td>The total number of successful extra point kicks made after touchdowns.</td></tr>
+                        <tr><td>PAT Pass Attempts</td><td>Offense</td><td>PATs</td><td>The total number of pass attempts on a two-point conversion play after a touchdown.</td></tr>
+                        <tr><td>PAT Pass Completions</td><td>Offense</td><td>PATs</td><td>The number of successful pass attempts on a two-point conversion play.</td></tr>
+                        <tr><td>PAT Rush Attempts</td><td>Offense</td><td>PATs</td><td>The total number of rushing attempts on a two-point conversion play.</td></tr>
+                        <tr><td>PAT Rush Completions</td><td>Offense</td><td>PATs</td><td>The number of successful rushing attempts on a two-point conversion play.</td></tr>
+                        <tr><td>Total Kickoffs</td><td>Special Teams</td><td>Kickoff</td><td>The total number of times the team kicked off to start a drive.</td></tr>
+                        <tr><td>Kickoff Yards</td><td>Special Teams</td><td>Kickoff</td><td>The total number of yards gained on all kickoffs.</td></tr>
+                        <tr><td>Kickoff Touchbacks</td><td>Special Teams</td><td>Kickoff</td><td>The number of kickoffs that resulted in a touchback.</td></tr>
+                        <tr><td>Kickoffs Out of Bounds</td><td>Special Teams</td><td>Kickoff</td><td>The number of kickoffs that went out of bounds, resulting in a penalty.</td></tr>
+                        <tr><td>Kick Returns</td><td>Special Teams</td><td>Kickoff</td><td>The total number of kickoffs returned by the team.</td></tr>
+                        <tr><td>Kick Return Yards</td><td>Special Teams</td><td>Kickoff</td><td>The total number of yards gained by the team on kickoff returns.</td></tr>
+                        <tr><td>Kick Return Touchdowns</td><td>Special Teams</td><td>Kickoff</td><td>The total number of touchdowns scored on kickoff returns.</td></tr>
+                        <tr><td>Longest Kick Return</td><td>Special Teams</td><td>Kickoff</td><td>The longest single kickoff return by the team.</td></tr>
+                        <tr><td>Total Punts</td><td>Special Teams</td><td>Punts</td><td>The total number of times the team punted the ball.</td></tr>
+                        <tr><td>Punting Yards</td><td>Special Teams</td><td>Punts</td><td>The total number of yards gained on all punts.</td></tr>
+                        <tr><td>Punts of 50+ Yards</td><td>Special Teams</td><td>Punts</td><td>The number of punts that traveled at least 50 yards.</td></tr>
+                        <tr><td>Punts Inside 20</td><td>Special Teams</td><td>Punts</td><td>The number of punts that landed inside the opponent's 20-yard line.</td></tr>
+                        <tr><td>Longest Punt</td><td>Special Teams</td><td>Punts</td><td>The longest single punt made by the team.</td></tr>
+                        <tr><td>Punt Touchbacks</td><td>Special Teams</td><td>Punts</td><td>The number of punts that resulted in a touchback.</td></tr>
+                        <tr><td>Fair Catches on Punts</td><td>Special Teams</td><td>Punts</td><td>The number of punts where the receiving team called a fair catch.</td></tr>
+                        <tr><td>Blocked Punts</td><td>Special Teams</td><td>Punts</td><td>The number of punts that were blocked by the opposing team.</td></tr>
+                        <tr><td>Punt Returns</td><td>Special Teams</td><td>Punt return</td><td>The total number of punts returned by the team.</td></tr>
+                        <tr><td>Punt Return Yards</td><td>Special Teams</td><td>Punt return</td><td>The total number of yards gained by the team on punt returns.</td></tr>
+                        <tr><td>Punt Return Touchdowns</td><td>Special Teams</td><td>Punt return</td><td>The total number of touchdowns scored on punt returns.</td></tr>
+                        <tr><td>Longest Punt Return</td><td>Special Teams</td><td>Punt return</td><td>The longest single punt return made by the team.</td></tr>
+                        <tr><td>Total Touchdowns</td><td>Offense</td><td>Scoring</td><td>The total number of touchdowns scored by the team across all types of plays.</td></tr>
+                        <tr><td>Total Field Goals Made</td><td>Special Teams</td><td>Field Goal</td><td>The total number of successful field goals made by the team.</td></tr>
+                        <tr><td>Total PAT Kicks Made</td><td>Special Teams</td><td>PATs</td><td>The total number of successful extra point kicks made by the team.</td></tr>
+                        <tr><td>Passing Yards Per Attempt</td><td>Offense</td><td>Passes</td><td>The average number of yards gained per passing attempt by the team.</td></tr>
+                        <tr><td>Pass Completion Percentage</td><td>Offense</td><td>Passes</td><td>The percentage of pass attempts completed by the team.</td></tr>
+                        <tr><td>Average Rushing Yards</td><td>Offense</td><td>Rushing</td><td>The average number of net yards gained per rushing attempt by the team.</td></tr>
+                        <tr><td>Average Yards per Reception</td><td>Offense</td><td>Receiving</td><td>The average number of yards gained per reception by the team.</td></tr>
+                        <tr><td>Takeaways</td><td>Defense</td><td>Turnovers</td><td>The number of times the team recovered a fumble or intercepted a pass.</td></tr>
+                        <tr><td>Field Goal Percentage</td><td>Special Teams</td><td>Field Goal</td><td>The percentage of field goal attempts successfully made by the team.</td></tr>
+                        <tr><td>Kickoffs Returned</td><td>Special Teams</td><td>Kickoff Returns</td><td>The number of kickoffs returned by the team.</td></tr>
+                        <tr><td>Average Punt Return Yards</td><td>Special Teams</td><td>Punt return</td><td>The average number of yards gained per punt return by the team.</td></tr>
+                        <tr><td>Net Kickoff Yards</td><td>Special Teams</td><td>Kickoff</td><td>The total net yards gained on kickoffs by the special teams unit.</td></tr>
+                        <tr><td>Average Punt Yards</td><td>Special Teams</td><td>Punts</td><td>The average number of yards per punt made by the team.</td></tr>
+                        <tr><td>Total Offensive Yards</td><td>Offense</td><td>Total Offense</td><td>The total number of yards gained by the team on offense.</td></tr>
+                        <tr><td>All-Purpose Yards</td><td>Offense</td><td>Total Offense</td><td>The total yards gained by the team from rushing, receiving, and returns.</td></tr>
+                        <tr><td>1st Down Attempts</td><td>Offense</td><td>First Down</td><td>The total number of 1st down attempts.</td></tr>
+                        <tr><td>1st Down Conversions</td><td>Offense</td><td>First Down</td><td>The number of successful 1st down conversions.</td></tr>
+                        <tr><td>2nd Down Attempts</td><td>Offense</td><td>2nd Down</td><td>The total number of 2nd down attempts.</td></tr>
+                        <tr><td>2nd Down Conversions</td><td>Offense</td><td>2nd Down</td><td>The number of successful 2nd down conversions.</td></tr>
+                        <tr><td>Biggest Lead of the game</td><td>Offense</td><td>Biggest Lead</td><td>The highest point margin by which the team led during the game.</td></tr>
+                        <tr><td>Biggest scoring run</td><td>Offense</td><td>Biggest Scoring Run</td><td>The highest number of consecutive points scored without interruption.</td></tr>
+                        <tr><td>Longest field goal attempt</td><td>Special Teams</td><td>Field Goal</td><td>The longest field goal attempted during the game, regardless of whether it was successful.</td></tr>
+                        <tr><td>Field Goal Blocked by</td><td>Defense</td><td>Blocks</td><td>The number of field goals blocked by the team or player.</td></tr>
+                        <tr><td>Longest fumble return</td><td>Defense</td><td>Fumble Return</td><td>The longest distance returned by the team after recovering a fumble.</td></tr>
+                        <tr><td>Total fumble returns</td><td>Defense</td><td>Fumble Return</td><td>The total number of fumble returns by the team.</td></tr>
+                        <tr><td>average yards per fumble return</td><td>Defense</td><td>Fumble Return</td><td>The average yards gained on fumble returns.</td></tr>
+                        <tr><td>Avg yards per interception return</td><td>Defense</td><td>Interception Return</td><td>The average yards gained after intercepting a pass.</td></tr>
+                        <tr><td>Average gross yards from kickoff</td><td>Special Teams</td><td>Kickoff</td><td>The average gross yardage gained per kickoff.</td></tr>
+                        <tr><td>Kickoff gross yards</td><td>Special Teams</td><td>Kickoff</td><td>The total gross yardage gained from all kickoffs.</td></tr>
+                        <tr><td>Kick-off return average</td><td>Special Teams</td><td>Kickoff</td><td>The average yards gained per kickoff return.</td></tr>
+                        <tr><td>Total kickoff returns</td><td>Special Teams</td><td>Kickoff</td><td>The total number of kickoff returns attempted.</td></tr>
+                        <tr><td>All kicks blocked by</td><td>Defense</td><td>Blocks</td><td>The number of any type of kicks (FG, PAT, punt) blocked by the team.</td></tr>
+                        <tr><td>Pass Efficiency</td><td>Offense</td><td>Passes</td><td>A composite metric measuring a quarterback's overall passing effectiveness.</td></tr>
+                        <tr><td>Avg yards per pass completion</td><td>Offense</td><td>Passes</td><td>The average number of yards gained per completed pass.</td></tr>
+                        <tr><td>Percentage of passes resulting in TD</td><td>Offense</td><td>Passes</td><td>The percentage of completed passes that resulted in a touchdown.</td></tr>
+                        <tr><td>PAT attempt</td><td>Special Teams</td><td>PATs</td><td>The total number of point-after-touchdown (PAT) attempts.</td></tr>
+                        <tr><td>PAT kick blocked</td><td>Offense</td><td>PATs</td><td>The number of PAT kicks that were blocked.</td></tr>
+                        <tr><td>PAT kick blocked by</td><td>Defense</td><td>Blocks</td><td>The number of PAT kicks blocked by the team.</td></tr>
+                        <tr><td>PAT Fumble return</td><td>Defense</td><td>PATs</td><td>The number of fumble returns that occurred during PAT attempts.</td></tr>
+                        <tr><td>PAT kick return</td><td>Defense</td><td>PATs</td><td>The number of PAT kick returns after a failed attempt.</td></tr>
+                        <tr><td>PAT kick made</td><td>Special Teams</td><td>PATs</td><td>The total number of successful PAT kicks made.</td></tr>
+                        <tr><td>PAT receptions</td><td>Offense</td><td>PATs</td><td>The number of receptions made during a 2-point PAT attempt.</td></tr>
+                        <tr><td>PAT 2pt conversion</td><td>Offense</td><td>PATs</td><td>The number of 2-point conversion attempts following a touchdown.</td></tr>
+                        <tr><td>PAT 2pt made</td><td>Offense</td><td>PATs</td><td>The number of successful 2-point PAT conversions.</td></tr>
+                        <tr><td>All purpose net yards</td><td>Offense</td><td>Plays</td><td>Total yards gained by a player including rushing, receiving, and returns.</td></tr>
+                        <tr><td>Total plays</td><td>Offense</td><td>Plays</td><td>Total number of offensive plays executed.</td></tr>
+                        <tr><td>Total points</td><td>Offense</td><td>Scoring</td><td>Total number of points scored by the team.</td></tr>
+                        <tr><td>Punts blocked by</td><td>Defense</td><td>Blocks</td><td>The number of punts blocked by the team.</td></tr>
+                        <tr><td>Average punt yards (net)</td><td>Special Teams</td><td>Punts</td><td>The average net distance of all punts.</td></tr>
+                        <tr><td>Net punt yards</td><td>Special Teams</td><td>Punts</td><td>The total net yardage of all punts.</td></tr>
+                        <tr><td>Redzone Score</td><td>Offense</td><td>Red Zone</td><td>The number of times the team scored when in the red zone.</td></tr>
+                        <tr><td>Redzone attempts passing plays</td><td>Offense</td><td>Red Zone</td><td>The number of pass plays attempted in the red zone.</td></tr>
+                        <tr><td>Rush left</td><td>Offense</td><td>Rushing</td><td>The number of rushing plays attempted to the left side.</td></tr>
+                        <tr><td>Rush middle</td><td>Offense</td><td>Rushing</td><td>The number of rushing plays attempted up the middle.</td></tr>
+                        <tr><td>Rush right</td><td>Offense</td><td>Rushing</td><td>The number of rushing plays attempted to the right side.</td></tr>
+                        <tr><td>Safety 2 pt</td><td>Defense</td><td>Safety</td><td>The number of safeties (2-point defensive scores) recorded.</td></tr>
+                        <tr><td>Times team lead</td><td>Offense</td><td>Time Leading</td><td>The total time the team was leading in the game.</td></tr>
+                        <tr><td>Times score was tied</td><td>Defense</td><td>Times Scores Level</td><td>The number of times the score was tied during the game.</td></tr>
+                        <tr><td>Turnovers</td><td>Offense</td><td>Turnovers</td><td>The total number of times the team gave up possession via fumble or interception.</td></tr>
+                        <tr><td>Wins in overtime</td><td>Results</td><td></td><td>The number of overtime games won.</td></tr>
+                        <tr><td>Average yards per play</td><td>Offense</td><td>Plays</td><td>The average number of yards gained per offensive play.</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section id="mbb">
+                <h2>Men's Basketball</h2>
+                <p>Access and manage basketball competitions within leagues.</p>
+                <h3 id="mbb-players">Players</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Field Goals Made</td><td>Offense</td><td>The total number of field goals successfully made by the player or team.</td></tr>
+                        <tr><td>Field Goals Attempted</td><td>Offense</td><td>The total number of field goal shots attempted by the player or team.</td></tr>
+                        <tr><td>Three-Pointers Made</td><td>Offense</td><td>The total number of three-point shots successfully made.</td></tr>
+                        <tr><td>Three-Pointers Attempted</td><td>Offense</td><td>The total number of three-point shot attempts.</td></tr>
+                        <tr><td>Free Throws Made</td><td>Offense</td><td>The total number of successful free throw shots.</td></tr>
+                        <tr><td>Free Throws Attempted</td><td>Offense</td><td>The total number of free throw shots attempted.</td></tr>
+                        <tr><td>Total Points</td><td>Offense</td><td>The total number of points scored by the player or team.</td></tr>
+                        <tr><td>Blocks</td><td>Defense</td><td>The number of opponent shot attempts that were deflected or stopped by the player or team.</td></tr>
+                        <tr><td>Steals</td><td>Defense</td><td>The number of times a player or team legally took the ball away from an opponent, resulting in a change of possession.</td></tr>
+                        <tr><td>Assists</td><td>Offense</td><td>The number of passes that directly led to a made basket by a teammate.</td></tr>
+                        <tr><td>Minutes Played</td><td>Combined</td><td>The total number of minutes the player was on the court.</td></tr>
+                        <tr><td>Offensive Rebounds</td><td>Offense</td><td>The number of rebounds collected by the player or team on the offensive end after a missed shot.</td></tr>
+                        <tr><td>Defensive Rebounds</td><td>Defense</td><td>The number of rebounds collected by the player or team on the defensive end after a missed shot.</td></tr>
+                        <tr><td>Total Rebounds</td><td>Combined</td><td>The total number of rebounds collected by the player or team, including both offensive and defensive rebounds.</td></tr>
+                        <tr><td>Personal Fouls</td><td>Fouls</td><td>The number of fouls committed by a player that are not technical or flagrant.</td></tr>
+                        <tr><td>Technical Fouls</td><td>Fouls</td><td>The number of technical fouls called against the player or team due to unsportsportsmanlike conduct or other infractions.</td></tr>
+                        <tr><td>Turnovers</td><td>Fouls</td><td>The number of times a player or team lost possession of the ball to the opposing team.</td></tr>
+                        <tr><td>Field Goal Percentage</td><td>Offense</td><td>The shooting percentage calculated from field goals made divided by field goals attempted.</td></tr>
+                        <tr><td>Three-Point Percentage</td><td>Offense</td><td>The shooting percentage calculated from three-point shots made divided by three-point shots attempted.</td></tr>
+                        <tr><td>Free Throw Percentage</td><td>Offense</td><td>The shooting percentage calculated from free throws made divided by free throws attempted.</td></tr>
+                    </tbody>
+                </table>
+                <h3 id="mbb-teams">Teams</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Field Goals Made</td><td>Offense</td><td>The total number of field goals successfully made by the player or team.</td></tr>
+                        <tr><td>Field Goals Attempted</td><td>Offense</td><td>The total number of field goal shots attempted by the player or team.</td></tr>
+                        <tr><td>Three-Pointers Made</td><td>Offense</td><td>The total number of three-point shots successfully made.</td></tr>
+                        <tr><td>Three-Pointers Attempted</td><td>Offense</td><td>The total number of three-point shot attempts.</td></tr>
+                        <tr><td>Free Throws Made</td><td>Offense</td><td>The total number of successful free throw shots.</td></tr>
+                        <tr><td>Free Throws Attempted</td><td>Offense</td><td>The total number of free throw shots attempted.</td></tr>
+                        <tr><td>Total Points</td><td>Offense</td><td>The total number of points scored by the player or team.</td></tr>
+                        <tr><td>Blocks</td><td>Defense</td><td>The number of opponent shot attempts that were deflected or stopped by the player or team.</td></tr>
+                        <tr><td>Steals</td><td>Defense</td><td>The number of times a player or team legally took the ball away from an opponent, resulting in a change of possession.</td></tr>
+                        <tr><td>Assists</td><td>Offense</td><td>The number of passes that directly led to a made basket by a teammate.</td></tr>
+                        <tr><td>Offensive Rebounds</td><td>Offense</td><td>The number of rebounds collected by the player or team on the offensive end after a missed shot.</td></tr>
+                        <tr><td>Defensive Rebounds</td><td>Defense</td><td>The number of rebounds collected by the player or team on the defensive end after a missed shot.</td></tr>
+                        <tr><td>Total Rebounds</td><td>Combined</td><td>The total number of rebounds collected by the player or team, including both offensive and defensive rebounds.</td></tr>
+                        <tr><td>Personal Fouls</td><td>Fouls</td><td>The number of fouls committed by a player that are not technical or flagrant.</td></tr>
+                        <tr><td>Technical Fouls</td><td>Fouls</td><td>The number of technical fouls called against the player or team due to unsportsmanlike conduct or other infractions.</td></tr>
+                        <tr><td>Team Fouls</td><td>Fouls</td><td>The number of fouls called against the team</td></tr>
+                        <tr><td>Turnovers</td><td>Fouls</td><td>The number of times a player or team lost possession of the ball to the opposing team.</td></tr>
+                        <tr><td>Field Goal Percentage</td><td>Offense</td><td>The shooting percentage calculated from field goals made divided by field goals attempted.</td></tr>
+                        <tr><td>Three-Point Percentage</td><td>Offense</td><td>The shooting percentage calculated from three-point shots made divided by three-point shots attempted.</td></tr>
+                        <tr><td>Free Throw Percentage</td><td>Offense</td><td>The shooting percentage calculated from free throws made divided by free throws attempted.</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section id="wbb">
+                <h2>Women's Basketball</h2>
+                <p>Manage and retrieve information about basketball clubs.</p>
+                <h3 id="wbb-players">Players</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Field Goals Made</td><td>Offense</td><td>The total number of field goals successfully made by the player or team.</td></tr>
+                        <tr><td>Field Goals Attempted</td><td>Offense</td><td>The total number of field goal shots attempted by the player or team.</td></tr>
+                        <tr><td>Three-Pointers Made</td><td>Offense</td><td>The total number of three-point shots successfully made.</td></tr>
+                        <tr><td>Three-Pointers Attempted</td><td>Offense</td><td>The total number of three-point shot attempts.</td></tr>
+                        <tr><td>Free Throws Made</td><td>Offense</td><td>The total number of successful free throw shots.</td></tr>
+                        <tr><td>Free Throws Attempted</td><td>Offense</td><td>The total number of free throw shots attempted.</td></tr>
+                        <tr><td>Total Points</td><td>Offense</td><td>The total number of points scored by the player or team.</td></tr>
+                        <tr><td>Blocks</td><td>Defense</td><td>The number of opponent shot attempts that were deflected or stopped by the player or team.</td></tr>
+                        <tr><td>Steals</td><td>Defense</td><td>The number of times a player or team legally took the ball away from an opponent, resulting in a change of possession.</td></tr>
+                        <tr><td>Assists</td><td>Offense</td><td>The number of passes that directly led to a made basket by a teammate.</td></tr>
+                        <tr><td>Minutes Played</td><td>Combined</td><td>The total number of minutes the player was on the court.</td></tr>
+                        <tr><td>Offensive Rebounds</td><td>Offense</td><td>The number of rebounds collected by the player or team on the offensive end after a missed shot.</td></tr>
+                        <tr><td>Defensive Rebounds</td><td>Defense</td><td>The number of rebounds collected by the player or team on the defensive end after a missed shot.</td></tr>
+                        <tr><td>Total Rebounds</td><td>Combined</td><td>The total number of rebounds collected by the player or team, including both offensive and defensive rebounds.</td></tr>
+                        <tr><td>Personal Fouls</td><td>Fouls</td><td>The number of fouls committed by a player that are not technical or flagrant.</td></tr>
+                        <tr><td>Technical Fouls</td><td>Fouls</td><td>The number of technical fouls called against the player or team due to unsportsmanlike conduct or other infractions.</td></tr>
+                        <tr><td>Turnovers</td><td>Fouls</td><td>The number of times a player or team lost possession of the ball to the opposing team.</td></tr>
+                        <tr><td>Field Goal Percentage</td><td>Offense</td><td>The shooting percentage calculated from field goals made divided by field goals attempted.</td></tr>
+                        <tr><td>Three-Point Percentage</td><td>Offense</td><td>The shooting percentage calculated from three-point shots made divided by three-point shots attempted.</td></tr>
+                        <tr><td>Free Throw Percentage</td><td>Offense</td><td>The shooting percentage calculated from free throws made divided by free throws attempted.</td></tr>
+                    </tbody>
+                </table>
+                <h3 id="wbb-teams">Teams</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Field Goals Made</td><td>Offense</td><td>The total number of field goals successfully made by the player or team.</td></tr>
+                        <tr><td>Field Goals Attempted</td><td>Offense</td><td>The total number of field goal shots attempted by the player or team.</td></tr>
+                        <tr><td>Three-Pointers Made</td><td>Offense</td><td>The total number of three-point shots successfully made.</td></tr>
+                        <tr><td>Three-Pointers Attempted</td><td>Offense</td><td>The total number of three-point shot attempts.</td></tr>
+                        <tr><td>Free Throws Made</td><td>Offense</td><td>The total number of successful free throw shots.</td></tr>
+                        <tr><td>Free Throws Attempted</td><td>Offense</td><td>The total number of free throw shots attempted.</td></tr>
+                        <tr><td>Total Points</td><td>Offense</td><td>The total number of points scored by the player or team.</td></tr>
+                        <tr><td>Blocks</td><td>Defense</td><td>The number of opponent shot attempts that were deflected or stopped by the player or team.</td></tr>
+                        <tr><td>Steals</td><td>Defense</td><td>The number of times a player or team legally took the ball away from an opponent, resulting in a change of possession.</td></tr>
+                        <tr><td>Assists</td><td>Offense</td><td>The number of passes that directly led to a made basket by a teammate.</td></tr>
+                        <tr><td>Offensive Rebounds</td><td>Offense</td><td>The number of rebounds collected by the player or team on the offensive end after a missed shot.</td></tr>
+                        <tr><td>Defensive Rebounds</td><td>Defense</td><td>The number of rebounds collected by the player or team on the defensive end after a missed shot.</td></tr>
+                        <tr><td>Total Rebounds</td><td>Combined</td><td>The total number of rebounds collected by the player or team, including both offensive and defensive rebounds.</td></tr>
+                        <tr><td>Personal Fouls</td><td>Fouls</td><td>The number of fouls committed by a player that are not technical or flagrant.</td></tr>
+                        <tr><td>Technical Fouls</td><td>Fouls</td><td>The number of technical fouls called against the player or team due to unsportsmanlike conduct or other infractions.</td></tr>
+                        <tr><td>Team Fouls</td><td>Fouls</td><td>The number of fouls called against the team</td></tr>
+                        <tr><td>Turnovers</td><td>Fouls</td><td>The number of times a player or team lost possession of the ball to the opposing team.</td></tr>
+                        <tr><td>Field Goal Percentage</td><td>Offense</td><td>The shooting percentage calculated from field goals made divided by field goals attempted.</td></tr>
+                        <tr><td>Three-Point Percentage</td><td>Offense</td><td>The shooting percentage calculated from three-point shots made divided by three-point shots attempted.</td></tr>
+                        <tr><td>Free Throw Percentage</td><td>Offense</td><td>The shooting percentage calculated from free throws made divided by free throws attempted.</td></tr>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sidebarLinks = document.querySelectorAll('.sidebar .sidebar-link');
+            const sections = document.querySelectorAll('.main-content section');
+
+            // Function to update active link state and manage dropdown visibility
+            function updateActiveLinkState(targetLink) {
+                // Remove active class from all sidebar links
+                sidebarLinks.forEach(link => {
+                    link.classList.remove('active');
+                });
+
+                // Collapse all submenus
+                document.querySelectorAll('.submenu').forEach(submenu => {
+                    submenu.classList.remove('show');
+                    submenu.style.maxHeight = null;
+                    const dropdownToggle = submenu.previousElementSibling;
+                    if (dropdownToggle && dropdownToggle.classList.contains('dropdown-toggle')) {
+                        dropdownToggle.classList.remove('active');
+                    }
+                });
+
+                // Add active class to the clicked link
+                targetLink.classList.add('active');
+
+                // If the clicked link is a submenu item, ensure its parent dropdown is open and active
+                let parentSubmenu = targetLink.closest('.submenu');
+                if (parentSubmenu) {
+                    parentSubmenu.classList.add('show');
+                    parentSubmenu.style.maxHeight = parentSubmenu.scrollHeight + "px";
+                    const dropdownToggle = parentSubmenu.previousElementSibling;
+                    if (dropdownToggle && dropdownToggle.classList.contains('dropdown-toggle')) {
+                        dropdownToggle.classList.add('active');
+                    }
+                }
+            }
+
+            // Flag to prevent Intersection Observer from overriding active state immediately after a click
+            let isScrollingFromClick = false;
+
+            // Click event listener for all sidebar links
+            sidebarLinks.forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault(); // Prevent default link behavior
+
+                    // Handle dropdown toggle behavior
+                    if (this.classList.contains('dropdown-toggle')) {
+                        const submenu = this.nextElementSibling;
+                        // Toggle 'active' class on the dropdown header
+                        this.classList.toggle('active');
+                        // Toggle 'show' class for the submenu
+                        if (submenu.classList.contains('show')) {
+                            submenu.classList.remove('show');
+                            submenu.style.maxHeight = null;
+                        } else {
+                            // Close other open submenus before opening this one
+                            document.querySelectorAll('.submenu.show').forEach(openSubmenu => {
+                                openSubmenu.classList.remove('show');
+                                openSubmenu.style.maxHeight = null;
+                                // Also deactivate their respective dropdown toggles
+                                const prevToggle = openSubmenu.previousElementSibling;
+                                if (prevToggle && prevToggle.classList.contains('dropdown-toggle')) {
+                                    prevToggle.classList.remove('active');
+                                }
+                            });
+                            submenu.classList.add('show');
+                            submenu.style.maxHeight = submenu.scrollHeight + "px";
+                        }
+                        // For dropdown toggles, we don't necessarily want to scroll the main content unless a sub-item is clicked
+                        // So, we don't set isScrollingFromClick to true here, unless a sub-item is clicked.
+                    } else {
+                        // Handle direct navigation links (including submenu items)
+                        updateActiveLinkState(this); // Update active state for the clicked link and its parent dropdown
+
+                        const targetId = this.getAttribute('href');
+                        const targetElement = document.querySelector(targetId);
+                        if (targetElement) {
+                            isScrollingFromClick = true; // Set flag before scrolling
+                            targetElement.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'start' // Ensure the top of the element aligns with the top of the viewport
+                            });
+                            history.replaceState(null, null, targetId); // Use replaceState for internal navigation
+                            // Reset flag after a short delay to allow smooth scroll to complete
+                            setTimeout(() => {
+                                isScrollingFromClick = false;
+                            }, 500); // Adjust delay as needed
+                        }
+                    }
+                });
+            });
+
+            // Adjust max-height on window resize for collapsible content and submenus
+            window.addEventListener('resize', () => {
+                document.querySelectorAll('.collapsible-content.show').forEach(content => {
+                    content.style.maxHeight = content.scrollHeight + "px";
+                });
+                document.querySelectorAll('.submenu.show').forEach(submenu => {
+                    submenu.style.maxHeight = submenu.scrollHeight + "px";
+                });
+            });
+
+            // Intersection Observer for scroll-based active state
+            const observerOptions = {
+                root: null, // viewport
+                rootMargin: '0px',
+                threshold: 0.3 // Trigger when 30% of the section is visible
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                if (isScrollingFromClick) return; // Ignore observer updates if scroll initiated by click
+
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const currentId = entry.target.id;
+                        // Only activate main section links via observer
+                        const mainSectionLink = document.querySelector(`.sidebar-link[href="#${currentId}"]`);
+                        if (mainSectionLink && !mainSectionLink.classList.contains('dropdown-toggle')) {
+                             updateActiveLinkState(mainSectionLink);
+                        } else if (mainSectionLink && mainSectionLink.classList.contains('dropdown-toggle')) {
+                            // If a main section (like #mfb) is intersecting, activate its dropdown toggle
+                            // but don't automatically open its submenu or activate its children through scroll
+                            // unless a child is already active.
+                            // This part is tricky to get perfect with observer and click.
+                            // For simplicity, we'll just ensure the main dropdown is active.
+                            mainSectionLink.classList.add('active');
+                        }
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all main content sections
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+
+            // Initial highlight on page load
+            const initialHash = window.location.hash;
+            if (initialHash) {
+                const initialLink = document.querySelector(`.sidebar-link[href="${initialHash}"]`);
+                if (initialLink) {
+                    updateActiveLinkState(initialLink);
+                    // Scroll to the initial hash target, and temporarily disable observer
+                    isScrollingFromClick = true;
+                    const targetElement = document.querySelector(initialHash);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({ behavior: 'auto', block: 'start' }); // Use 'auto' for immediate jump on load
+                    }
+                    setTimeout(() => {
+                        isScrollingFromClick = false;
+                    }, 100); // Short delay to re-enable observer
+                }
+            } else {
+                // Default to the first main section if no hash, and if it has a submenu, open it and activate first child
+                const firstMainLink = document.querySelector('.sidebar-item .dropdown-toggle');
+                if (firstMainLink) {
+                    updateActiveLinkState(firstMainLink); // Activate 'Men's Football' and open its submenu
+                    const firstSubmenuItem = firstMainLink.nextElementSibling.querySelector('.sidebar-link');
+                    if (firstSubmenuItem) {
+                        updateActiveLinkState(firstSubmenuItem); // Activate 'Players'
+                        const targetElement = document.querySelector(firstSubmenuItem.getAttribute('href'));
+                        if (targetElement) {
+                            targetElement.scrollIntoView({ behavior: 'auto', block: 'start' });
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

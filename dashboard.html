@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Database Overview • Athlyte Palette</title>
+    <style>
+        :root {
+            /* Athlyte brand palette */
+            --primary: #003d79; /* deep navy */
+            --secondary: #00b4d8; /* bright cyan */
+            --accent: #ffb703; /* warm highlight */
+            --bg: #f5f7fa; /* light background */
+            --text: #14213d; /* near‑black */
+            --muted: #6b7280; /* gray */
+            --radius: 8px;
+            --max-width: 800px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 2rem 2.5rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        main {
+            max-width: var(--max-width);
+            width: 100%;
+            position: relative;
+        }
+
+        h1,
+        h2,
+        h3 {
+            scroll-margin-top: 80px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+            color: var(--primary);
+            display: flex; /* Use flexbox to align content and arrow */
+            align-items: center; /* Vertically align items */
+            gap: 0.5rem; /* Space between the arrow and the text */
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            margin-top: 2rem;
+            margin-bottom: 0.5rem;
+            color: var(--secondary); /* Changed to secondary as per previous h2 styling */
+        }
+
+        h3 {
+            font-size: 1.25rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.4rem;
+            color: var(--primary); /* Changed to primary as per previous h3 styling */
+        }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        ul {
+            margin-left: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        li + li {
+            margin-top: 0.25rem;
+        }
+
+        a {
+            color: var(--secondary);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+            color: var(--accent);
+        }
+
+        /* anchor icon */
+        .anchor-link {
+            opacity: 0;
+            margin-left: 0.25rem;
+            font-size: 0.9em;
+            text-decoration: none;
+            color: var(--muted);
+        }
+
+        h2:hover .anchor-link,
+        h3:hover .anchor-link {
+            opacity: 1;
+        }
+
+        /* code blocks */
+        pre {
+            position: relative;
+            background: var(--primary);
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: var(--radius);
+            overflow: auto;
+        }
+
+        pre code {
+            font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 0.875rem;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: var(--secondary);
+            border: none;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: var(--accent);
+        }
+
+        /* divider */
+        .divider {
+            border: 0;
+            border-bottom: 2px solid var(--secondary);
+            margin-bottom: 1rem;
+        }
+
+        /* advisory */
+        .warn {
+            color: var(--muted);
+            font-size: 0.875rem;
+        }
+
+        /* Back arrow styling */
+        .back-arrow {
+            font-size: 1.5rem; /* Adjusted size to fit beside heading */
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 0.2rem; /* Reduced padding */
+            border-radius: var(--radius);
+            transition: background-color 0.2s ease;
+        }
+
+        .back-arrow:hover {
+            background-color: rgba(0, 61, 121, 0.1);
+            text-decoration: none;
+        }
+
+        /* Responsive adjustment for back arrow */
+        @media (max-width: 768px) {
+            .back-arrow {
+                font-size: 1.2rem; /* Smaller on mobile */
+                padding: 0.1rem;
+            }
+            h1 {
+                font-size: 1.8rem; /* Adjust h1 size on mobile */
+            }
+            body {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <article>
+            <!-- Central content starts here -->
+            <h1 id="Dashboard">
+                <a href="athlyte_search_information_centre.html" class="back-arrow" aria-label="Go back">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                        <polyline points="12 19 5 12 12 5"></polyline>
+                    </svg>
+                </a>
+                Dashboard
+            </h1>
+            <hr class="divider" />
+
+            <p>
+                The Athlyte Search Dashboard is a powerful tool that allows you to search for sports data using natural language queries. 
+                It supports various sports and provides detailed statistics on players and teams.
+            </p>
+            <figure>
+                <img src="Search.png" width="800" height="350" alt="Search Dashboard" />
+            </figure>
+            <h4>Click <a href="streaks.html">here</a> to know more about how to write natural language queries.</h4>
+
+
+            <h2 id="sports">
+                Sports
+            </h2>
+
+            <p>Currently, there are three sports the Athlyte Search Dashboard supports:
+                <ul>
+                <li>Men's Football</li>
+                <li>Men's Basketball</li>
+                <li>Women's Basketball</li>
+                </ul>
+            </p>
+
+            <h1>Features</h1>
+            <hr class="divider" />
+
+            <h2 id="search_type">
+                Search Type
+            </h2>
+
+            <p>There are two sorts of stat queries that can be performed on every sport:
+                <ul>
+                <li>Player-based queries</li>
+                <li>Team -based queries</li>
+                </ul>
+            </p>
+            <figure>
+                <img src="Search Type.png" width="800" height="350" alt="Search Type" />
+            </figure>
+
+            <h2>Result Screen</h2>
+            <p> The results screen displays the results of your query. </p>
+            <figure>
+                <img src="Search Dashboard.png" width="800" height="350" alt="Athlyte Search Dashboard Screenshot" />
+            </figure>
+
+            <h2>Filters</h2>
+
+            <p> To further refine the results you can use the filters on the left side of the result table.</p>
+            <figure>
+                <img src="Search Filter.png" width="800" height="350" alt="Athlyte Search Dashboard Screenshot" />
+            </figure>
+
+            <table style="width:100%; border-collapse: separate; border-spacing: 0 15px;">
+                <tr>
+                    <th style="text-align:left; border-bottom: 2px solid #ccc;">Filter</th> 
+                    <th style="text-align:left; border-bottom: 2px solid #ccc;">Function</th>
+                </tr>
+                <tr>
+                    <td>Opponent Conference</td>
+                    <td>Filter results based on the selected opponent's conference.</td>
+                </tr>
+                <tr>
+                    <td>Opponent</td>
+                    <td>Select a specific opponent team to filter the matches.</td>
+                </tr>
+                <tr>
+                    <td>Results</td>
+                    <td>Filter by match result (e.g., Win or Loss).</td>
+                </tr>
+                <tr>
+                    <td>Game Type</td>
+                    <td>Filter based on the type of game (e.g., Regular, Postseason).
+                </td>
+                </tr>
+                <tr>
+                    <td>Period Type </td>
+                    <td>Filter results by the time period (e.g., Regular, Overtime).</td>
+                </tr>
+                <tr>
+                    <td>Date</td>
+                    <td>Specify a custom date range to narrow down the results by match date.</td>
+                </tr>
+                <tr style="color: #00b4d8">
+                    <td>Name</td>
+                    <td>Search for a specific player by name.</td>
+                </tr>
+                <tr style="color: #00b4d8;">
+                    <td>Position</td>
+                    <td>Filter players based on their playing position (e.g., RB, QB, WR).</td>
+                </tr>
+                <tr style="color: #00b4d8;">
+                    <td>Classes</td>
+                    <td>Filter players by class year (e.g., Freshman, Sophomore, Junior, Senior).</td>
+                </tr>
+            </table>
+
+            <p style="font-size:13px"><i> *Note: Highlighted filters apply only to Player-based searches and are not applicable for Team-based queries.</i></p>
+        </article>
+    </main>
+</body>
+</html>
