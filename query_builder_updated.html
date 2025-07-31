@@ -5,53 +5,49 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>How to write Natural-Language Queries</title>
 <style>
-:root{
+:root {
   --garnet: #6bcaf4;
   --blue: #003366;
   --bg: #faf9f7;
   --radius: 1rem;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; font-family: "Inter", system-ui, sans-serif; }
-body { background: var(--bg); display: flex; justify-content: center; padding: 2rem; }
-.demo { background: #fff; border-radius: var(--radius); box-shadow: 0 8px 32px rgba(0,0,0,.07); width: 100%; max-width: 780px; overflow: hidden; }
-header { background: var(--blue); color: #fff; padding: 1.25rem; text-align: center; }
-h1 { font-size: 1.75rem; }
-.progress { height: 6px; background: #e0e0e0; position: relative; }
-.progress-bar { height: 100%; width: 0; background: var(--garnet); transition: width .4s cubic-bezier(.4,0,.2,1); }
-/* Steps */
-.step { padding: 2rem 1.5rem; display: none; opacity: 0; transform: translateY(8px); transition: opacity .3s ease, transform .3s ease; }
-.step.visible { display: block; opacity: 1; transform: translateY(0); }
-.step h2 { font-size: 1.25rem; color: var(--blue); }
-/* Option grids */
-.options { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; margin-top: 1rem; }
-.options.vertical { grid-template-columns: 1fr; } /* for period list */
-.option { border: 2px solid #ddd; border-radius: var(--radius); padding: 1rem .75rem; text-align: center; cursor: pointer; user-select: none; transition: .18s all; min-height: 72px; display: flex; align-items: center; justify-content: center; background: #fff; }
-.option.selected { border-color: var(--garnet); background: var(--garnet); color: #fff; }
-.option:hover { border-color: var(--blue); }
-/* Qualifier pills */
-.qualifiers { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1rem; }
-.qual { border: 2px solid #ddd; border-radius: 30px; padding: .4rem .9rem; font-size: .9rem; cursor: pointer; transition: .18s; }
-.qual.selected { border-color: var(--garnet); background: var(--garnet); color: #fff; }
-.qual:hover { border-color: var(--blue); }
-/* Examples */
-.examples { background: #fefefe; border-top: 1px dashed #ddd; padding: 1.5rem 1.25rem; margin-bottom: 1.5rem; display: none; }
-.examples h2 { font-size: 1.25rem; color: var(--blue); margin-bottom: .75rem; }
-.examples .card { border: 1px solid #ddd; border-radius: var(--radius); padding: 0.75rem; margin-bottom: .5rem; display: flex; justify-content: space-between; align-items: center; }
-.examples .cta { font-size: .82rem; color: var(--blue); text-decoration: underline; cursor: pointer; }
+*{box-sizing:border-box;margin:0;padding:0;font-family:"Inter",system-ui,sans-serif;}
+body{background:var(--bg);display:flex;justify-content:center;padding:2rem;}
+.demo{background:#fff;border-radius:var(--radius);box-shadow:0 8px 32px rgba(0,0,0,.07);width:100%;max-width:780px;overflow:hidden;}
+header{background:var(--blue);color:#fff;padding:1.25rem;text-align:center;}
+h1{font-size:1.75rem;}
+.progress{height:6px;background:#e0e0e0;position:relative;}
+.progress-bar{height:100%;width:0;background:var(--garnet);transition:width .4s cubic-bezier(.4,0,.2,1);}/* Steps */
+.step{padding:2rem 1.5rem;display:none;opacity:0;transform:translateY(8px);transition:opacity .3s ease,transform .3s ease;}
+.step.visible{display:block;opacity:1;transform:translateY(0);}
+.step h2{font-size:1.25rem;color:var(--blue);}/* Option grids */
+.options{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin-top:1rem;}
+.options.vertical{grid-template-columns:1fr;} /* for period list */
+.option{border:2px solid #ddd;border-radius:var(--radius);padding:1rem .75rem;text-align:center;cursor:pointer;user-select:none;transition:.18s all;min-height:72px;display:flex;align-items:center;justify-content:center;background:#fff;}
+.option.selected{border-color:var(--garnet);background:var(--garnet);color:#fff;}
+.option:hover{border-color:var(--blue);}/* Qualifier pills */
+.qualifiers{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1rem;}
+.qual{border:2px solid #ddd;border-radius:30px;padding:.4rem .9rem;font-size:.9rem;cursor:pointer;transition:.18s;}
+.qual.selected{border-color:var(--garnet);background:var(--garnet);color:#fff;}
+.qual:hover{border-color:var(--blue);}/* Examples */
+.examples{background:#fefefe;border-top:1px dashed #ddd;padding:1.5rem 1.25rem;margin-bottom:1.5rem;display:none;}
+.examples h2{font-size:1.25rem;color:var(--blue);margin-bottom:.75rem;}
+.examples .card{border:1px solid #ddd;border-radius:var(--radius);padding:1rem;margin-bottom:.75rem;display:flex;justify-content:space-between;align-items:center;}
+.examples .cta{font-size:.82rem;color:var(--blue);text-decoration:underline;cursor:pointer;}
 /* warnings */
-#careerWarn { color: #b00; font-size: .85rem; margin-top: .6rem; display: none; }
+#careerWarn{color:#b00;font-size:.85rem;margin-top:.6rem;display:none;}
 
 /* Table Styles */
 .query-table {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 0.75rem; /* Reduced gap */
+  margin-bottom: 1rem; /* Reduced gap */
   font-size: 0.9rem;
   line-height: 1.4;
 }
 .query-table th, .query-table td {
   border: 1px solid #e0e0e0;
-  padding: 0.75rem 1rem;
+  padding: 0.8rem 1rem;
   text-align: left;
   vertical-align: top;
 }
@@ -91,7 +87,7 @@ h1 { font-size: 1.75rem; }
 <header><h1>How to write Natural-Language Queries</h1></header>
 <div class="progress"><div class="progress-bar" id="bar"></div></div>
 
-<div class="intro-section" style="padding: 0rem 1.5rem 1.5rem 1.5rem;">     <table class="query-table">
+<div class="intro-section" style="padding: 1.5rem 1.5rem 1.5rem 1.5rem;">     <table class="query-table">
         <thead>
             <tr>
                 <th>Query Type</th>
@@ -103,39 +99,39 @@ h1 { font-size: 1.75rem; }
         </thead>
         <tbody>
             <tr>
-                <td>Stat Search (Basic)</td>
+                <td>Basic</td>
                 <td>Single Stat</td>
                 <td><span class="tick-icon">✓</span></td>
                 <td><span class="tick-icon">✓</span></td>
-                <td><i> Example: "Players with rushing yards greater than 10."</i></td>
+                <td>"Players with rushing yards greater than 10."</td>
             </tr>
             <tr>
-                <td>Stat Search (Complex)</td>
+                <td>Complex</td>
                 <td>1 to 3 Stats</td>
                 <td><span class="tick-icon">✓</span></td>
                 <td><span class="tick-icon">✓</span></td>
-                <td><i>Example: Teams with at least 20 passing attempts AND three field goals made in a game.</i></td>
+                <td>"Teams with at least 20 passing attempts AND three field goals made in any game."</td>
             </tr>
             <tr>
                 <td>Records</td>
                 <td>Single Stat</td>
                 <td><span class="tick-icon">✓</span></td>
                 <td><span class="tick-icon">✓</span></td>
-                <td><i>Example: Highest number of points scored.</i></td>
+                <td>"Highest number of field goals scored in any quarter."</td>
             </tr>
             <tr>
                 <td>Last Time</td>
                 <td>Up to 3 Stats</td>
                 <td><span class="tick-icon">✓</span></td>
                 <td><span class="tick-icon">✓</span></td>
-                <td><i>Example: Last time any team had at least one field goal made with overall 30 points.</i></td>
+                <td>"Last time any team had at least one field goal made with overall 30 rushing yards in any game.'"</td>
             </tr>
             <tr>
                 <td>Streaks</td>
                 <td>1 or 2 Stats</td>
-                <td><span class="cross-icon">✘</span></td>
-                <td>Game only</td>
-                <td><i> Example: Players with 12 receiving yards over 6 consecutive games.</i></td>
+                <td><span class="cross-icon">✗</span></td>
+                <td>Game Period</td>
+                <td>"Player with a streak of 3 games with at least 1 touchdown."</td>
             </tr>
         </tbody>
     </table>
@@ -211,19 +207,27 @@ const qualifierOpts = [
     {val:'oppConf',label:'Opp. Conf.'},
     {val:'oppTeam',label:'Opponent Team'},
     {val:'homeAway',label:'Home/Away'},
-    {val:'winLoss',label:'Win/Loss'}
+    {val:'winLoss',label:'Win/Loss'},
+    {val:'team', label:'Team'}, // New qualifier
+    {val:'playerName', label:'Player Name'}, // New qualifier
+    {val:'division', label:'Division'} // New qualifier
 ];
 const CLASS_VALUES = ['Freshman','Sophomore','Junior','Senior', 'Graduate Student', 'Redshirt Freshman', 'Fifth-Year Senior'];
 const HOME_AWAY_VALUES = ['home games','away games', 'neutral site games'];
 const WIN_LOSS_VALUES = ['wins','losses', 'ties']; // Assuming ties for football
 const CONF_VALUES = ['ACC','SEC','Big Ten','Pac‑12','Big 12','Big East','Mountain West','C-USA', 'MAC', 'Sun Belt'];
-const POSITION_VALUES_FOOTBALL = ['Quarterback','Running Back','Line Backer','Wide Receiver','Defensive End','Cornerback','Safety','Offensive Lineman', 'Defensive Tackle', 'Tight End', 'Kicker', 'Punter'];
+const POSITION_VALUES_FOOTBALL = ['Quarterback','Running Back','Linebacker','Wide Receiver','Defensive End','Cornerback','Safety','Offensive Lineman', 'Defensive Tackle', 'Tight End', 'Kicker', 'Punter'];
 const POSITION_VALUES_BBALL = ['Guard','Forward','Center','Point Guard','Shooting Guard','Small Forward','Power Forward'];
 const OPPONENT_TEAM_VALUES = ['Alabama','Duke','Stanford','UConn','Florida State','Clemson','Michigan','Ohio State','Georgia','LSU','Texas A&M','North Carolina', 'Auburn', 'Miami (FL)', 'USC', 'Oklahoma'];
+const TEAM_VALUES = ['Florida State','Clemson','LSU','Michigan','Duke','North Carolina','Kansas','Kentucky']; // Example teams
+const PLAYER_NAME_VALUES = ['Travis Etienne', 'Trevor Lawrence', 'Zion Williamson', 'Sabrina Ionescu', 'Joe Burrow', 'Caitlin Clark', 'Luka Doncic', 'Tom Brady']; // Example player names
+const DIVISION_VALUES = ['Atlantic Division', 'Coastal Division', 'SEC West', 'Big Ten East', 'ACC Atlantic', 'Pac-12 North']; // Example divisions
+
+
 // Comparison operators for stat search
 const COMPARISON_OPERATORS = ['at least', 'more than', 'exactly'];
 // Comparison operators for streaks
-const STREAK_COMPARISON_OPERATORS = ['greater than', 'lesser than'];
+const STREAK_COMPARISON_OPERATORS = ['greater than', 'less than', 'equal to'];
 
 
 // Stat pools per sport (now including recordType)
@@ -303,6 +307,15 @@ function buildQualifierParts(){
             case 'oppTeam':
                 partsMap.oppTeam = randomItem(OPPONENT_TEAM_VALUES);
                 break;
+            case 'team': // New qualifier
+                partsMap.team = randomItem(TEAM_VALUES);
+                break;
+            case 'playerName': // New qualifier
+                partsMap.playerName = randomItem(PLAYER_NAME_VALUES);
+                break;
+            case 'division': // New qualifier
+                partsMap.division = randomItem(DIVISION_VALUES);
+                break;
         }
     });
     return partsMap;
@@ -321,41 +334,62 @@ function generateStatSearchExamples(){
         let sentence = '';
         let subject = '';
         let mainQuals = [];
-        // Build the Subject Phrase (Player/Team + Position + Class)
-        if (path.entity === 'player') {
-            if (qualifierData.class && qualifierData.position) {
-                subject = `${qualifierData.class} ${qualifierData.position}s`;
-            } else if (qualifierData.position) {
-                subject = `${qualifierData.position}s`;
-            } else if (qualifierData.class) {
-                subject = `${qualifierData.class} players`;
-            } else {
-                subject = `Players`;
-            }
-        } else { // Team Stats
-            subject = `Teams`;
-        }
-        // Add other general qualifiers to mainQuals
-        if (qualifierData.homeAway) {
-            mainQuals.push(`from ${qualifierData.homeAway}`);
-        }
-        if (qualifierData.winLoss) {
-            mainQuals.push(`with ${qualifierData.winLoss}`);
-        }
-        if (qualifierData.teamConf) {
-            mainQuals.push(`from the ${qualifierData.teamConf} conference`);
-        }
-        // Construct the initial part of the sentence
-        sentence = `${subject}`;
-        if (mainQuals.length > 0) {
-            sentence += ` ${mainQuals.join(' ')}`;
-        }
-        sentence += ` with ${comparison} ${value} ${statLabel}`; // Use statLabel here
+
+        // Determine the base subject and add player-specific qualifiers
+        if (path.entity === 'player') {
+            if (qualifierData.playerName) {
+                subject = qualifierData.playerName;
+                // If a player name is chosen, position and class refer to that player
+                if (qualifierData.class) mainQuals.push(`${qualifierData.class}`);
+                if (qualifierData.position) mainQuals.push(`${qualifierData.position}`);
+                mainQuals.push(''); // e.g., "LeBron James Freshman Guard player" (will be joined later)
+            } else if (qualifierData.class && qualifierData.position) {
+                subject = `${qualifierData.class} ${qualifierData.position}s`;
+            } else if (qualifierData.position) {
+                subject = `${qualifierData.position}s`;
+            } else if (qualifierData.class) {
+                subject = `${qualifierData.class} players`;
+            } else {
+                subject = `Players`;
+            }
+        } else { // Team Stats
+            subject = `Teams`;
+        }
+
+        // Add general qualifiers (Team, Division, Home/Away, Win/Loss, Team Conf)
+        if (qualifierData.team && !qualifierData.playerName) { // Avoid "LeBron James from FSU" unless explicitly designed
+             mainQuals.push(`from ${qualifierData.team}`);
+        }
+        if (qualifierData.division) {
+            mainQuals.push(`from the ${qualifierData.division}`);
+        }
+        if (qualifierData.homeAway) {
+            mainQuals.push(`in ${qualifierData.homeAway}`);
+        }
+        if (qualifierData.winLoss) {
+            mainQuals.push(`with ${qualifierData.winLoss}`);
+        }
+        if (qualifierData.teamConf && !qualifierData.team) { // Avoid "from ACC conference from FSU"
+            mainQuals.push(`from the ${qualifierData.teamConf} conference`);
+        }
+
+        // Construct the initial part of the sentence
+        if (mainQuals.length > 0) {
+            if (qualifierData.playerName) { // If it's a specific player, qualifiers precede "with"
+                sentence = `${subject} ${mainQuals.join(' ')}`;
+                sentence += ` with ${comparison} ${value} ${statLabel}`;
+            } else { // Generic players or teams, qualifiers follow subject
+                sentence = `${subject} ${mainQuals.join(' ')} with ${comparison} ${value} ${statLabel}`;
+            }
+        } else {
+            sentence = `${subject} with ${comparison} ${value} ${statLabel}`;
+        }
+        
         // Add period
         if (path.period === 'quarter') {
-            sentence += ` in a quarter`;
+            sentence += ` in any quarter`;
         } else {
-            sentence += ` in a ${path.period}`;
+            sentence += ` in any ${path.period}`;
         }
         // Append Opponent Qualifiers at the very end
         if (qualifierData.oppTeam) {
@@ -384,28 +418,41 @@ function generateLastTimeExamples(){
         let sentence = '';
         let subject = ''; // Singular for "When was the last time when a..."
         let mainQuals = [];
-        // Build the Subject Phrase (Player/Team + Position + Class) - Singular
-        if (path.entity === 'player') {
-            if (qualifierData.class && qualifierData.position) {
-                subject = `a ${qualifierData.class} ${qualifierData.position}`;
-            } else if (qualifierData.position) {
-                subject = `a ${qualifierData.position}`;
-            } else if (qualifierData.class) {
-                subject = `a ${qualifierData.class} player`;
-            } else {
-                subject = `a player`;
-            }
-        } else { // Team Stats
-            subject = `a team`;
-        }
-        // Add other general qualifiers to mainQuals
+
+        // Build the Subject Phrase (Player/Team + Position + Class) - Singular
+        if (path.entity === 'player') {
+            if (qualifierData.playerName) {
+                subject = qualifierData.playerName; // No "a" for specific player names
+                if (qualifierData.class) mainQuals.push(`${qualifierData.class}`);
+                if (qualifierData.position) mainQuals.push(`${qualifierData.position}`);
+                mainQuals.push('player');
+            } else if (qualifierData.class && qualifierData.position) {
+                subject = `a ${qualifierData.class} ${qualifierData.position}`;
+            } else if (qualifierData.position) {
+                subject = `a ${qualifierData.position}`;
+            } else if (qualifierData.class) {
+                subject = `a ${qualifierData.class} player`;
+            } else {
+                subject = `a player`;
+            }
+        } else { // Team Stats
+            subject = `a team`;
+        }
+        
+        // Add general qualifiers (Team, Division, Home/Away, Win/Loss, Team Conf)
+        if (qualifierData.team && !qualifierData.playerName) {
+             mainQuals.push(`from ${qualifierData.team}`);
+        }
+        if (qualifierData.division) {
+            mainQuals.push(`from the ${qualifierData.division}`);
+        }
         if (qualifierData.homeAway) {
             mainQuals.push(`from ${qualifierData.homeAway}`);
         }
         if (qualifierData.winLoss) {
             mainQuals.push(`with ${qualifierData.winLoss}`);
         }
-        if (qualifierData.teamConf) {
+        if (qualifierData.teamConf && !qualifierData.team) {
             mainQuals.push(`from the ${qualifierData.teamConf} conference`);
         }
         // Construct the initial part of the sentence
@@ -447,41 +494,59 @@ function generateRecordsExamples(){
         let sentence = '';
         let subject = '';
         let mainQuals = [];
-        // Build the Subject Phrase (Player/Team + Position + Class) - Plural (like statSearch)
-        if (path.entity === 'player') {
-            if (qualifierData.class && qualifierData.position) {
-                subject = `${qualifierData.class} ${qualifierData.position}s`;
-            } else if (qualifierData.position) {
-                subject = `${qualifierData.position}s`;
-            } else if (qualifierData.class) {
-                subject = `${qualifierData.class} players`;
-            } else {
-                subject = `Players`;
-            }
-        } else { // Team Stats
-            subject = `Teams`;
-        }
-        // Add other general qualifiers to mainQuals
+
+        // Determine the base subject and add player-specific qualifiers
+        if (path.entity === 'player') {
+            if (qualifierData.playerName) {
+                subject = qualifierData.playerName;
+                if (qualifierData.class) mainQuals.push(`${qualifierData.class}`);
+                if (qualifierData.position) mainQuals.push(`${qualifierData.position}`);
+            } else if (qualifierData.class && qualifierData.position) {
+                subject = `${qualifierData.class} ${qualifierData.position}s`;
+            } else if (qualifierData.position) {
+                subject = `${qualifierData.position}s`;
+            } else if (qualifierData.class) {
+                subject = `${qualifierData.class} players`;
+            } else {
+                subject = `Players`;
+            }
+        } else { // Team Stats
+            subject = `Teams`;
+        }
+
+        // Add general qualifiers (Team, Division, Home/Away, Win/Loss, Team Conf)
+        if (qualifierData.team && !qualifierData.playerName) {
+             mainQuals.push(`from ${qualifierData.team}`);
+        }
+        if (qualifierData.division) {
+            mainQuals.push(`from the ${qualifierData.division}`);
+        }
         if (qualifierData.homeAway) {
             mainQuals.push(`from ${qualifierData.homeAway}`);
         }
         if (qualifierData.winLoss) {
             mainQuals.push(`with ${qualifierData.winLoss}`);
         }
-        if (qualifierData.teamConf) {
+        if (qualifierData.teamConf && !qualifierData.team) {
             mainQuals.push(`from the ${qualifierData.teamConf} conference`);
         }
-        // Construct the initial part of the sentence
-        sentence = `${subject}`;
-        if (mainQuals.length > 0) {
-            sentence += ` ${mainQuals.join(' ')}`;
-        }
-        sentence += ` with the ${recordType} ${statLabel}`; // Use recordType and statLabel
+        
+        // Construct the initial part of the sentence
+        if (mainQuals.length > 0) {
+            if (qualifierData.playerName) { // If it's a specific player, qualifiers precede "with"
+                sentence = `${subject} ${mainQuals.join(' ')}`;
+                sentence += ` with the ${recordType} ${statLabel}`;
+            } else { // Generic players or teams, qualifiers follow subject
+                sentence = `${subject} ${mainQuals.join(' ')} with the ${recordType} ${statLabel}`;
+            }
+        } else {
+            sentence = `${subject} with the ${recordType} ${statLabel}`;
+        }
         // Add period
         if (path.period === 'quarter') {
-            sentence += ` in a quarter`;
+            sentence += ` in any quarter`;
         } else {
-            sentence += ` in a ${path.period}`;
+            sentence += ` in any ${path.period}`;
         }
         // Append Opponent Qualifiers at the very end
         if (qualifierData.oppTeam) {
@@ -512,8 +577,8 @@ function generateStreaksExamples(){
 
         let sentence = '';
         let subject = '';
-        // Qualifiers are ignored in building the streak query sentence as per the request
-        // let mainQuals = []; 
+        // For Streaks, qualifiers are explicitly ignored in the generated sentence as per your request.
+        // The toggleQualifiersAndPeriodsForCategory function handles blocking the UI elements.
         
         // Build the Subject Phrase (Player/Team based only)
         if (path.entity === 'player') {
@@ -530,7 +595,6 @@ function generateStreaksExamples(){
             sentence = `${subject} with ${streakValue} ${statLabel} over ${streakLength} consecutive games`;
         }
         
-        // Opponent qualifiers are also ignored for generic streak queries as per the request
         sentence += `.`; // Streaks end with a period
 
         ex.push(sentence);
@@ -568,11 +632,21 @@ function toggleCareer(){
     }
 }
 
-// Function to enable/disable qualifiers and periods based on category
+// Function to enable/disable qualifiers and periods based on category AND sport
 function toggleQualifiersAndPeriodsForCategory(){
     const allQualifiers = [...qualWrap.children];
     const allPeriods = [...periodWrap.children];
 
+    // 1. Reset all to enabled by default
+    allPeriods.forEach(periodEl => {
+        periodEl.classList.remove('blocked');
+    });
+    allQualifiers.forEach(qualEl => {
+        qualEl.classList.remove('blocked');
+    });
+    careerWarn.style.display='none'; // Hide general warning for now
+
+    // 2. Apply rules based on selected category (e.g., Streaks)
     if (path.cat === 'streaks') {
         // For Streaks: Only 'Game' period is allowed
         allPeriods.forEach(periodEl => {
@@ -583,7 +657,6 @@ function toggleQualifiersAndPeriodsForCategory(){
                     path.period = null; // Clear invalid selection
                 }
             } else {
-                periodEl.classList.remove('blocked');
                 // Auto-select game if no period is selected or if previously invalid period was selected
                 if (!path.period || path.period !== 'game') {
                     clearSelection(periodWrap);
@@ -593,24 +666,35 @@ function toggleQualifiersAndPeriodsForCategory(){
             }
         });
 
-        // For Streaks: Qualifiers are BLOCKED as per latest instruction.
+        // For Streaks: All Qualifiers are BLOCKED as per your request.
         allQualifiers.forEach(qualEl => {
             qualEl.classList.add('blocked'); // Block all qualifiers for streaks
             qualEl.classList.remove('selected'); // Deselect any active ones
             path.qualifiers.clear(); // Clear all selected qualifiers from path
         });
 
-
     } else {
-        // For other categories: Enable all periods and qualifiers
-        allPeriods.forEach(periodEl => {
-            periodEl.classList.remove('blocked');
-        });
-        allQualifiers.forEach(qualEl => {
-            qualEl.classList.remove('blocked');
-        });
-        // Re-evaluate career warning as it depends on entity
-        toggleCareer();
+        // 3. Apply rules based on selected Sport, IF not in 'streaks'
+        if (path.sport === 'mbb') { // Men's Basketball specific period blocking
+            allPeriods.forEach(periodEl => {
+                if (periodEl.dataset.val === 'quarter') { // Block quarter for MBB
+                    periodEl.classList.add('blocked');
+                    periodEl.classList.remove('selected');
+                    if (path.period === 'quarter') path.period = null;
+                }
+            });
+        } else if (path.sport === 'wbb') { // Women's Basketball specific period blocking
+            allPeriods.forEach(periodEl => {
+                if (periodEl.dataset.val === 'half') { // Block half for WBB
+                    periodEl.classList.add('blocked');
+                    periodEl.classList.remove('selected');
+                    if (path.period === 'half') path.period = null;
+                }
+            });
+        }
+        
+        // 4. Apply career period logic (which depends on entity type)
+        toggleCareer(); 
     }
 }
 
@@ -621,9 +705,9 @@ function makeSingleChoiceHandler(key,next){
         const tgt = e.target.closest('.option'); if(!tgt) return;
         clearSelection(e.currentTarget); tgt.classList.add('selected');
         path[key]=tgt.dataset.val;
-        if(key==='sport') path.sport=tgt.dataset.val;
-        if(key==='entity') toggleCareer();
-        if(key==='cat') toggleQualifiersAndPeriodsForCategory(); // <-- Call here when category changes
+        if(key==='sport' || key==='entity' || key==='cat'){ // Re-evaluate restrictions on these changes
+            toggleQualifiersAndPeriodsForCategory();
+        }
         if(next!=null){ updateProgress(next); scrollToStep(next);}
         showExamples();
     };
